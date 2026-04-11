@@ -120,6 +120,10 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+ul li a.active {
+  @apply border-b border-primary;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

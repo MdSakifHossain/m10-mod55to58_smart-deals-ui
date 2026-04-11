@@ -2,6 +2,7 @@
 
 React + TypeScript + Vite + shadcn/ui
 
+## [Live Link 🚀](#)
 
 ## Local Development
 

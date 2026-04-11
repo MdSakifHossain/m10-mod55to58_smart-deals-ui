@@ -5,7 +5,7 @@ const Unusual = () => {
   return (
     <div className="flex min-h-svh flex-col">
       <Header />
-      <div className="flex flex-1 justify-center p-10">
+      <div className="flex flex-1 justify-center px-20 py-10">
         <Outlet />
       </div>
     </div>

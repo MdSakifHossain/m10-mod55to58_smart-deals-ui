@@ -34,7 +34,7 @@ export const Header = () => {
       </Link>
 
       {/* middle */}
-      <ul className="flex items-center gap-6 text-xs">
+      <ul className="flex items-center gap-6 text-sm">
         {nav_links.map((link, index) => (
           <li key={index}>
             <NavLink

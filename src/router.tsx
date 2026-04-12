@@ -7,6 +7,7 @@ import Homepage from "./pages/Homepage"
 import NotFound from "./pages/NotFound"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import AllProducts from "./pages/AllProducts"
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         Component: Homepage,
+      },
+      {
+        path: "all-products",
+        Component: AllProducts,
       },
     ],
   },

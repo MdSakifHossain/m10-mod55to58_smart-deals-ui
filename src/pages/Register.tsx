@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
+import { Link } from "react-router"
 
 export default function Register() {
   return (
@@ -46,10 +47,6 @@ function SignupForm({ className, ...props }) {
                   placeholder="m@example.com"
                   required
                 />
-                <FieldDescription>
-                  We&apos;ll use this to contact you. We will not share your
-                  email with anyone else.
-                </FieldDescription>
               </Field>
               <Field>
                 <Field className="grid grid-cols-2 gap-4">
@@ -85,7 +82,7 @@ function SignupForm({ className, ...props }) {
                 </Button>
               </Field>
               <FieldDescription className="text-center">
-                Already have an account? <a href="#">Sign in</a>
+                Already have an account? <Link to="/login">Log in</Link>
               </FieldDescription>
             </FieldGroup>
           </form>

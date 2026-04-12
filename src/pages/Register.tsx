@@ -1,15 +1,5 @@
 import PageStructure from "@/components/my-components/PageStructure"
 
-export default function Register() {
-  return (
-    <PageStructure className="flex w-full flex-col items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm md:max-w-4xl">
-        <SignupForm />
-      </div>
-    </PageStructure>
-  )
-}
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -22,6 +12,16 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
+
+export default function Register() {
+  return (
+    <PageStructure className="flex w-full flex-col items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-4xl">
+        <SignupForm />
+      </div>
+    </PageStructure>
+  )
+}
 
 function SignupForm({ className, ...props }) {
   return (

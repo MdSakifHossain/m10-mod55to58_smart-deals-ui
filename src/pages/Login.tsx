@@ -16,10 +16,8 @@ import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
 
 export default function Login() {
   return (
-    <PageStructure className="flex items-center justify-center">
-      <div className="w-full max-w-sm md:max-w-4xl">
-        <LoginForm />
-      </div>
+    <PageStructure className="flex w-full max-w-sm items-center justify-center md:max-w-4xl">
+      <LoginForm />
     </PageStructure>
   )
 }

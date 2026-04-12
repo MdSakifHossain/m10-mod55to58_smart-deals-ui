@@ -1,11 +1,10 @@
 import PageStructure from "@/components/my-components/PageStructure"
+import HeroSection from "./HeroSection"
 
-const Homepage = () => {
+export default function Homepage() {
   return (
     <PageStructure>
-      <p>Homepagee</p>
+      <HeroSection />
     </PageStructure>
   )
 }
-
-export default Homepage

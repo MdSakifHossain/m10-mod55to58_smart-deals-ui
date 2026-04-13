@@ -6,8 +6,13 @@ React + TypeScript + Vite + shadcn/ui
 
 ## Todo
 
-- [ ] add `All Products` page
-- [ ] protect `All Products` page
+- [x] add `All Products` page
+- [x] add `My Products` page
+- [ ] add `My Bids` page
+- [ ] add `Create Products` page
+- [ ] add `Product Details` page
+- [ ] add `Product Details` page
+
 
 ## Local Development
 

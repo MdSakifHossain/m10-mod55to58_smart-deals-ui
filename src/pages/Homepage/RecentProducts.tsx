@@ -13,7 +13,7 @@ export default function RecentProducts({ className }) {
       {/* 3x2 grid */}
       <div className="grid w-full max-w-6xl grid-cols-3 gap-6">
         {[...Array(6)].map((_, i) => (
-          <ProductCard badge={true} key={i} />
+          <ProductCard badge={false} key={i} />
         ))}
       </div>
 

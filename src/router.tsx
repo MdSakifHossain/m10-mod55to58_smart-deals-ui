@@ -9,6 +9,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import AllProducts from "./pages/AllProducts"
 import MyProducts from "./pages/MyProducts"
+import MyBids from "./pages/MyBids"
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: "my-products",
         Component: MyProducts,
+      },
+      {
+        path: "my-bids",
+        Component: MyBids,
       },
     ],
   },

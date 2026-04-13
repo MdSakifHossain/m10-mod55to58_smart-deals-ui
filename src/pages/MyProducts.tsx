@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Button } from "@base-ui/react"
 
 import {
   DropdownMenu,
@@ -26,6 +25,7 @@ import {
   IconPencil,
   IconTrashFilled,
 } from "@tabler/icons-react"
+import { Button } from "@/components/ui/button"
 
 export default function MyProducts() {
   return (
@@ -111,7 +111,7 @@ function DropdownMenuDestructive() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem variant="destructive">
             <IconTrashFilled />
             Delete
           </DropdownMenuItem>

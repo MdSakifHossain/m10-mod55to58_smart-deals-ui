@@ -21,7 +21,7 @@ const nav_links = [
   },
   {
     text: "Create Product",
-    to: "/create-products",
+    to: "/create-product",
   },
 ]
 

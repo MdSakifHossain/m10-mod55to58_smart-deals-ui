@@ -14,21 +14,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function ProductDetails() {
   return (
-    <PageStructure className="grid grid-cols-7 gap-10">
-      <LeftSide>
-        <img src="https://placehold.co/1280x720" alt="Product Image" />
-        <DescriptionCard />
-      </LeftSide>
+    <PageStructure className="grid grid-cols-1 gap-20">
+      <div className="grid grid-cols-7 gap-10">
+        <LeftSide>
+          <img src="https://placehold.co/1280x720" alt="Product Image" />
+          <DescriptionCard />
+        </LeftSide>
 
-      <RightSide>
-        <NavNameAndBadge />
-        <StartingPriceCard />
-        <ProductIdAndPostedOnCard />
-        <SellerInfoCard />
-        <Button size="lg" className="text-base font-semibold">
-          I want Buy This Product
-        </Button>
-      </RightSide>
+        <RightSide>
+          <NavNameAndBadge />
+          <StartingPriceCard />
+          <ProductIdAndPostedOnCard />
+          <SellerInfoCard />
+          <Button size="lg" className="text-base font-semibold">
+            I want Buy This Product
+          </Button>
+        </RightSide>
+      </div>
     </PageStructure>
   )
 }

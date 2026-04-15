@@ -11,6 +11,7 @@ import AllProducts from "./pages/AllProducts"
 import MyProducts from "./pages/MyProducts"
 import MyBids from "./pages/MyBids"
 import CreateProduct from "./pages/CreateProduct"
+import ProductDetails from "./pages/ProductDetails"
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "create-product",
         Component: CreateProduct,
+      },
+      {
+        path: "product-details",
+        Component: ProductDetails,
       },
     ],
   },

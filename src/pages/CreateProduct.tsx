@@ -10,7 +10,6 @@ import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { InputGroupTextarea } from "@/components/ui/input-group"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
@@ -192,7 +191,7 @@ function Fooorm() {
         label="Simple Description about your Product"
       >
         <Textarea
-          className="resize-y"
+          className="min-h-48 resize-y"
           id="product_description"
           placeholder="e.g. I bought this product 3 month ago. did not used more than 1/2 time. actually learning guitar is so tough..... "
         />

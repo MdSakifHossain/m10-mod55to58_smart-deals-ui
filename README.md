@@ -9,7 +9,9 @@ React + TypeScript + Vite + shadcn/ui
 - [x] add `All Products` page
 - [x] add `My Products` page
 - [x] add `My Bids` page
-- [ ] add `Create Products` page
+- [x] add `Create Products` page
+- [ ] set minumm height on `textarea` in `Create Products` page
+- [ ] remove lucide icons package by eradicating the footer2 `Logo` element
 - [ ] add `Product Details` page
 
 ## Local Development

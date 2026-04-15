@@ -1,14 +1,7 @@
-import { Logo, LogoImage, LogoText } from "@/components/shadcnblocks/logo"
 import { cn } from "@/lib/utils"
 import { Link } from "react-router"
 
 const Footer2 = ({
-  logo = {
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/block-1.svg",
-    alt: "blocks for shadcn/ui",
-    title: "Shadcnblocks.com",
-    url: "https://www.shadcnblocks.com",
-  },
   className,
   tagline = `Your trusted marketplace for authentic local products.\nDiscover the best deals from across Bangladesh.`,
   menuItems = [
@@ -59,24 +52,18 @@ const Footer2 = ({
 }) => {
   return (
     <section className={cn(className)}>
-      {/* <div className="container mx-auto"> */}
       <div className="container mx-auto">
         <footer>
           {/* top */}
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">
             <div className="col-span-2 mb-8 lg:mb-0">
               <div className="flex items-center gap-2 lg:justify-start">
-                <Logo url="/">
-                  {/* <LogoImage
-                    src={logo.src}
-                    alt={logo.alt}
-                    title={logo.title}
-                    className="h-10 dark:invert"
-                  /> */}
-                  <LogoText className="bg-foreground px-4 py-2 text-xl font-bold text-background">
-                    Smart<span className="text-primary">Deals</span>
-                  </LogoText>
-                </Logo>
+                <Link
+                  to="/"
+                  className="bg-foreground px-4 py-2 text-xl font-bold text-background"
+                >
+                  Smart<span className="text-primary">Deals</span>
+                </Link>
               </div>
               <p className="mt-4 text-sm">{tagline}</p>
             </div>

@@ -13,7 +13,7 @@
   "iconLibrary": "tabler",
   "rtl": false,
   "menuColor": "default",
-  "menuAccent": "bold",
+  "menuAccent": "subtle",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",

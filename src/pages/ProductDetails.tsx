@@ -1,6 +1,10 @@
 import PageStructure from "@/components/my-components/PageStructure"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { IconArrowNarrowLeftDashed } from "@tabler/icons-react"
+import {
+  IconArrowNarrowLeftDashed,
+  IconCheck,
+  IconTrashFilled,
+} from "@tabler/icons-react"
 import { Link } from "react-router"
 import {
   Card,
@@ -11,6 +15,14 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 export default function ProductDetails() {
   return (
@@ -30,6 +42,14 @@ export default function ProductDetails() {
             I want Buy This Product
           </Button>
         </RightSide>
+      </div>
+
+      <div className="grid grid-cols-1 gap-10">
+        <h2 className="text-5xl font-bold">
+          Bids For This Products: <span className="text-primary">1n</span>
+        </h2>
+
+        <ProductsTable />
       </div>
     </PageStructure>
   )
@@ -160,5 +180,78 @@ function SellerInfoCard() {
         </div>
       </CardContent>
     </Card>
+  )
+}
+
+function ProductsTable() {
+  return (
+    <div className="w-full rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow className="*:text-center">
+            <TableHead>SL No</TableHead>
+            <TableHead>Product</TableHead>
+            <TableHead>Bid Price</TableHead>
+            <TableHead>Seller</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {[...Array(3)].map((_, i) => (
+            <TableRow className="*:text-center">
+              <TableCell>{i + 1}</TableCell>
+
+              <TableCell className="flex justify-center">
+                <div className="flex gap-3">
+                  <img
+                    src="https://placehold.co/1280x720"
+                    alt="Product Image"
+                    className="w-16"
+                  />
+                  <div className="flex flex-col items-start">
+                    <p>Orange Juice</p>
+                    <p className="text-muted-foreground">$22.5</p>
+                  </div>
+                </div>
+              </TableCell>
+
+              <TableCell>$100</TableCell>
+
+              <TableCell className="flex justify-center">
+                <div className="flex items-center justify-center gap-3">
+                  <Avatar>
+                    <AvatarImage
+                      alt="Sara Chen"
+                      src="https://github.com/shadcn.png"
+                    />
+                    <AvatarFallback>SC</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col items-start">
+                    <p>Sara Chen</p>
+                    <p className="text-muted-foreground">
+                      crafts.by.sara@shop.net
+                    </p>
+                  </div>
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button>
+                    <IconCheck />
+                    Accept
+                  </Button>
+                  <Button variant="destructive">
+                    <IconTrashFilled />
+                    Reject
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   )
 }

@@ -23,6 +23,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Input } from "@/components/ui/input"
+import { Field, FieldLabel } from "@/components/ui/field"
 
 export default function ProductDetails() {
   return (
@@ -38,9 +50,12 @@ export default function ProductDetails() {
           <StartingPriceCard />
           <ProductIdAndPostedOnCard />
           <SellerInfoCard />
-          <Button size="lg" className="text-base font-semibold">
-            I want Buy This Product
-          </Button>
+
+          <BiddingDialogue>
+            <Button size="lg" className="text-base font-semibold">
+              I want Buy This Product
+            </Button>
+          </BiddingDialogue>
         </RightSide>
       </div>
 
@@ -253,5 +268,85 @@ function ProductsTable() {
         </TableBody>
       </Table>
     </div>
+  )
+}
+
+function BiddingDialogue({ children }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger render={children} />
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Give Seller Your Offered Price</AlertDialogTitle>
+        </AlertDialogHeader>
+        <Fooorm />
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Submit Bid</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
+
+function Fooorm() {
+  return (
+    <form className="grid grid-cols-1 gap-8">
+      {/* Buyer Name && Email */}
+      <TwoColGrid>
+        <FieldWithTilte id="buyer_name" label="Buyer Name">
+          <Input id="buyer_name" type="text" placeholder="Your name" required />
+        </FieldWithTilte>
+
+        <FieldWithTilte id="buyer_email" label="Buyer Email">
+          <Input
+            id="buyer_email"
+            type="email"
+            placeholder="Your  Email"
+            required
+          />
+        </FieldWithTilte>
+      </TwoColGrid>
+
+      {/* Image URL */}
+      <FieldWithTilte id="buyer_image_url" label="Buyer Image URL">
+        <Input
+          id="buyer_image_url"
+          placeholder="https://..."
+          type="url"
+          required
+        />
+      </FieldWithTilte>
+
+      {/* Bidding Price */}
+      <FieldWithTilte id="bidding_price" label="Place your Price ($)">
+        <Input id="bidding_price" placeholder="499.99" type="number" required />
+      </FieldWithTilte>
+
+      {/* Location */}
+      <FieldWithTilte id="contact_info" label="Contact Info">
+        <Input
+          id="contact_info"
+          placeholder="+88-01x-xxxx-xxxx"
+          type="tel"
+          required
+        />
+      </FieldWithTilte>
+    </form>
+  )
+}
+
+// Helper
+function TwoColGrid({ children }) {
+  return <Field className="grid grid-cols-2 gap-5">{children}</Field>
+}
+
+// Helper
+function FieldWithTilte({ id, label = "Label is REQUIRED", children }) {
+  return (
+    <Field>
+      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      {children}
+    </Field>
   )
 }

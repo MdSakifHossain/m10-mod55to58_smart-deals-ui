@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Card,
   CardAction,
@@ -8,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
+import { Link } from "react-router"
 
 const ProductCard = ({ badge }) => {
   return (
@@ -35,12 +37,15 @@ const ProductCard = ({ badge }) => {
         </CardDescription>
       </CardHeader>
       <CardFooter className="border-0">
-        <Button
-          className="w-full border-primary text-primary"
-          variant="outline"
+        <Link
+          to="/product-details"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "w-full border-primary text-primary"
+          )}
         >
           View Details
-        </Button>
+        </Link>
       </CardFooter>
     </Card>
   )

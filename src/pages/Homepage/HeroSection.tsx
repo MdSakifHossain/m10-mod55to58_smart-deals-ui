@@ -29,7 +29,7 @@ const config = {
     },
     btn2: {
       text: "Post Product",
-      url: "/create-products",
+      url: "/create-product",
     },
   },
 
@@ -75,7 +75,7 @@ function CTAs({ config }) {
         {config.btn1.text}
       </Link>
       <Link
-        to={config.btn2.text}
+        to={config.btn2.url}
         className={
           buttonVariants({ variant: "outline", size: "lg" }) +
           "border! border-primary! text-primary"

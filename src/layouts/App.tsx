@@ -9,7 +9,7 @@ export function App() {
       <div className="flex-1 px-20 py-10">
         <Outlet />
       </div>
-      <Footer2 className="bg-linear-to-b from-primary to-secondary pt-20 pb-10" />
+      <Footer2 className="bg-primary pt-20 pb-10" />
     </div>
   )
 }

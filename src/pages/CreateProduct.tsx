@@ -108,16 +108,16 @@ function Fooorm() {
         {/* Product Condition  */}
         <FieldWithTilte id="product_condition" label="Product Condition">
           <RadioGroup
-            defaultValue="comfortable"
+            defaultValue="new"
             className="flex w-fit items-center gap-6"
           >
             <div className="flex items-center gap-3">
-              <RadioGroupItem value="default" id="r1" />
-              <Label htmlFor="r1">Default</Label>
+              <RadioGroupItem value="new" id="r1" />
+              <Label htmlFor="r1">Brand New</Label>
             </div>
             <div className="flex items-center gap-3">
-              <RadioGroupItem value="comfortable" id="r2" />
-              <Label htmlFor="r2">Comfortable</Label>
+              <RadioGroupItem value="used" id="r2" />
+              <Label htmlFor="r2">Used</Label>
             </div>
           </RadioGroup>
         </FieldWithTilte>

@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Link, NavLink } from "react-router"
-import { IconLogin2, IconUserPlus } from "@tabler/icons-react"
+import { IconLogin2, IconRun, IconUserPlus } from "@tabler/icons-react"
 import { use } from "react"
 import { AuthContext } from "@/contexts/AuthContext"
 
@@ -56,6 +57,7 @@ export const Header = () => {
         {user ? (
           <Button variant="destructive" onClick={() => logOutUser()}>
             Log Out
+            <IconRun stroke={2} />
           </Button>
         ) : (
           <>

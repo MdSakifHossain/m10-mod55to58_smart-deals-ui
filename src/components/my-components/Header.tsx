@@ -1,6 +1,8 @@
-import { buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Link, NavLink } from "react-router"
 import { IconLogin2, IconUserPlus } from "@tabler/icons-react"
+import { use } from "react"
+import { AuthContext } from "@/contexts/AuthContext"
 
 const nav_links = [
   {
@@ -26,6 +28,8 @@ const nav_links = [
 ]
 
 export const Header = () => {
+  const { user, logOutUser } = use(AuthContext)
+
   return (
     <header className="flex items-center justify-between px-20 py-4">
       {/* left */}
@@ -49,23 +53,31 @@ export const Header = () => {
 
       {/* right */}
       <div className="flex gap-4">
-        <Link
-          to="/login"
-          className={
-            buttonVariants({ variant: "outline", size: "default" }) +
-            "border! border-primary! text-primary"
-          }
-        >
-          <IconLogin2 />
-          Login
-        </Link>
-        <Link
-          to="/register"
-          className={buttonVariants({ size: "default" }) + ""}
-        >
-          Register
-          <IconUserPlus />
-        </Link>
+        {user ? (
+          <Button variant="destructive" onClick={() => logOutUser()}>
+            Log Out
+          </Button>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              className={
+                buttonVariants({ variant: "outline", size: "default" }) +
+                "border! border-primary! text-primary"
+              }
+            >
+              <IconLogin2 />
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className={buttonVariants({ size: "default" }) + ""}
+            >
+              Register
+              <IconUserPlus />
+            </Link>
+          </>
+        )}
       </div>
     </header>
   )

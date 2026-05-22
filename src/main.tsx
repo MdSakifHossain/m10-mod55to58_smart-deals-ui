@@ -6,11 +6,14 @@ import { router } from "./router"
 
 import { ThemeProvider } from "@/components/theme-provider.tsx"
 import "./index.css"
+import AuthProvider from "./contexts/AuthProvider"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>
 )

@@ -37,6 +37,7 @@ const AuthProvider = ({ children }) => {
             ""
           )} 🐬🐢🦭`
         )
+        console.log(currentUser)
       } else {
         console.log("[Firebase] Logged Out - 🕊️")
       }

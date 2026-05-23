@@ -8,6 +8,8 @@ import {
   signOut,
 } from "firebase/auth"
 import { auth } from "@/firebase/firebase.init"
+import axios from "axios"
+import logger from "@/lib/logger"
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -28,18 +30,30 @@ const AuthProvider = ({ children }) => {
     return signOut(auth)
   }
 
+  const syncUserToDB = async (user) => {
+    const userData = {
+      firebase_uid: user.uid,
+      user_name: user.displayName,
+      user_image: user.photoURL,
+      user_location: null,
+      user_phone: user.phoneNumber,
+      user_email: user.email,
+    }
+
+    try {
+      await axios.post("http://localhost:3000/users", userData)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        console.log(
-          `[Firebase] Logged In - ${currentUser.providerData[0].providerId.replace(
-            ".com",
-            ""
-          )} 🐬🐢🦭`
-        )
-        console.log(currentUser)
+        logger("[Firebase] User Logged In")
+        await syncUserToDB(currentUser)
       } else {
-        console.log("[Firebase] Logged Out - 🕊️")
+        logger("[Firebase] User Logged Out")
       }
 
       setUser(currentUser)

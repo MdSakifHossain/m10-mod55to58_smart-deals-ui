@@ -47,7 +47,7 @@ function SignupForm({ className, ...props }) {
     try {
       await createUserWithEmail(email, password)
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 

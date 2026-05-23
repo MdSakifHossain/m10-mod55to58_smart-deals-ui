@@ -9,27 +9,38 @@ const nav_links = [
   {
     text: "Home",
     to: "/",
+    private: false,
   },
   {
     text: "All Products",
     to: "/all-products",
+    private: false,
   },
   {
     text: "My Products",
     to: "/my-products",
+    private: true,
   },
   {
     text: "My Bids",
     to: "/my-bids",
+    private: true,
   },
   {
     text: "Create Product",
     to: "/create-product",
+    private: true,
   },
 ]
 
 export const Header = () => {
   const { user, logOutUser, loading } = useAuth()
+
+  const filteredLinks = nav_links.filter((link) => {
+    if ((link.private === true && user) || link.private === false) return true
+
+    return false
+  })
 
   return (
     <header className="flex items-center justify-between px-20 py-4">
@@ -44,7 +55,7 @@ export const Header = () => {
           ? nav_links.map((_, index) => (
               <Skeleton key={index} className="h-5 w-21" />
             ))
-          : nav_links.map((link, index) => (
+          : filteredLinks.map((link, index) => (
               <li key={index}>
                 <NavLink
                   className="pb-0.5 hover:border-b hover:border-primary"

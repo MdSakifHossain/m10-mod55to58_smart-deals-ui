@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  deleteUser,
 } from "firebase/auth"
 import { auth } from "@/firebase/firebase.init"
 import axios from "axios"
@@ -48,6 +49,20 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const deleteAccount = async () => {
+    setLoading(true)
+    try {
+      const userUid = auth.currentUser.uid
+      await axios.delete(`http://localhost:3000/users/${userUid}`)
+      await deleteUser(auth.currentUser)
+      logger("[Firebase] Account Deletion Complete")
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -72,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     createUserWithEmail,
     loginWithEmail,
     logOutUser,
+    deleteAccount,
   }
 
   return (

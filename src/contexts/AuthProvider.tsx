@@ -53,8 +53,8 @@ export const AuthProvider = ({ children }) => {
     setLoading(true)
     try {
       const userUid = auth.currentUser.uid
-      await axios.delete(`http://localhost:3000/users/${userUid}`)
       await deleteUser(auth.currentUser)
+      await axios.delete(`http://localhost:3000/users/${userUid}`)
       logger("[Firebase] Account Deletion Complete")
     } catch (error) {
       console.error(error)

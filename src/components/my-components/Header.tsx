@@ -9,6 +9,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import { buttonVariants } from "../ui/button"
 
 const nav_links = [
   {

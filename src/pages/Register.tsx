@@ -14,8 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
 import { Link } from "react-router"
-import { use } from "react"
-import { AuthContext } from "@/contexts/AuthContext"
+import { useAuth } from "@/contexts/AuthProvider"
 
 export default function Register() {
   return (
@@ -28,7 +27,7 @@ export default function Register() {
 }
 
 function SignupForm({ className, ...props }) {
-  const { createUserWithEmail } = use(AuthContext)
+  const { createUserWithEmail } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()

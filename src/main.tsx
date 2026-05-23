@@ -6,7 +6,7 @@ import { router } from "./router"
 
 import { ThemeProvider } from "@/components/theme-provider.tsx"
 import "./index.css"
-import AuthProvider from "./contexts/AuthProvider"
+import { AuthProvider } from "./contexts/AuthProvider"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

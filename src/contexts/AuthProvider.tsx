@@ -1,6 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState } from "react"
-import { AuthContext } from "./AuthContext"
+import React, { createContext, useState, useEffect, useContext } from "react"
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -11,7 +10,9 @@ import { auth } from "@/firebase/firebase.init"
 import axios from "axios"
 import logger from "@/lib/logger"
 
-const AuthProvider = ({ children }) => {
+const AuthContext = createContext(undefined)
+
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -73,7 +74,20 @@ const AuthProvider = ({ children }) => {
     logOutUser,
   }
 
-  return <AuthContext value={authContextValues}>{children}</AuthContext>
+  return (
+    <AuthContext.Provider value={authContextValues}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
-export default AuthProvider
+export const useAuth = () => {
+  const context = useContext(AuthContext)
+
+  if (!context)
+    throw new Error(
+      "AuthContext is Missing. Place the Provider on the Main Tree"
+    )
+
+  return context
+}

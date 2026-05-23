@@ -2,8 +2,7 @@
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Link, NavLink } from "react-router"
 import { IconLogin2, IconRun, IconUserPlus } from "@tabler/icons-react"
-import { use } from "react"
-import { AuthContext } from "@/contexts/AuthContext"
+import { useAuth } from "@/contexts/AuthProvider"
 
 const nav_links = [
   {
@@ -29,7 +28,7 @@ const nav_links = [
 ]
 
 export const Header = () => {
-  const { user, logOutUser } = use(AuthContext)
+  const { user, logOutUser } = useAuth()
 
   return (
     <header className="flex items-center justify-between px-20 py-4">

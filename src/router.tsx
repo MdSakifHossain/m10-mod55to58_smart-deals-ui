@@ -12,6 +12,7 @@ import MyProducts from "./pages/MyProducts"
 import MyBids from "./pages/MyBids"
 import CreateProduct from "./pages/CreateProduct"
 import ProductDetails from "./pages/ProductDetails"
+import Profile from "./pages/Profile"
 
 export const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
       {
         path: "/register",
         Component: Register,
+      },
+      {
+        path: "profile",
+        Component: Profile,
       },
     ],
   },

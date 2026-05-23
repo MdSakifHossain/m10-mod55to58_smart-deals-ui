@@ -1,9 +1,15 @@
 // @ts-nocheck
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Link, NavLink } from "react-router"
-import { IconLogin2, IconRun } from "@tabler/icons-react"
+import { IconLogin2, IconUser } from "@tabler/icons-react"
 import { useAuth } from "@/contexts/AuthProvider"
 import { Skeleton } from "@/components/ui/skeleton"
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
 
 const nav_links = [
   {
@@ -70,12 +76,21 @@ export const Header = () => {
       {/* right */}
       <div className="flex gap-4">
         {loading ? (
-          <Skeleton className="h-8.5 w-25.5 rounded-md" />
+          <Skeleton className="size-10 rounded-full" />
         ) : user ? (
-          <Button variant="destructive" onClick={() => logOutUser()}>
-            Log Out
-            <IconRun stroke={2} />
-          </Button>
+          // <Button variant="destructive" onClick={() => logOutUser()}>
+          //   Log Out
+          //   <IconRun stroke={2} />
+          // </Button>
+          <Link to="/profile" title="Open Profile">
+            <Avatar size="lg">
+              <AvatarImage src={user.photoURL} />
+              <AvatarFallback>
+                <IconUser stroke={2} className="size-5" />
+              </AvatarFallback>
+              <AvatarBadge className="bg-primary" />
+            </Avatar>
+          </Link>
         ) : (
           <Link
             to="/login"

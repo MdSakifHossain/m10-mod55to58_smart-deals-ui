@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useAuth } from "@/contexts/AuthProvider"
 
 export default function Login() {
@@ -28,6 +28,7 @@ export default function Login() {
 
 function LoginForm({ className, ...props }) {
   const { loginWithEmail } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -37,6 +38,7 @@ function LoginForm({ className, ...props }) {
 
     try {
       await loginWithEmail(email, password)
+      navigate("/")
     } catch (err) {
       console.error(err)
     }

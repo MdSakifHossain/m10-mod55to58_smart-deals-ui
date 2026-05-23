@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useAuth } from "@/contexts/AuthProvider"
 
 export default function Register() {
@@ -28,6 +28,7 @@ export default function Register() {
 
 function SignupForm({ className, ...props }) {
   const { createUserWithEmail } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -45,6 +46,7 @@ function SignupForm({ className, ...props }) {
 
     try {
       await createUserWithEmail(email, password)
+      navigate("/")
     } catch (err) {
       console.error(err)
     }

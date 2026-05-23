@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { Button, buttonVariants } from "@/components/ui/button"
 import { Link, NavLink } from "react-router"
 import { IconLogin2, IconUser } from "@tabler/icons-react"
 import { useAuth } from "@/contexts/AuthProvider"
@@ -40,7 +39,7 @@ const nav_links = [
 ]
 
 export const Header = () => {
-  const { user, logOutUser, loading } = useAuth()
+  const { user, loading } = useAuth()
 
   const filteredLinks = nav_links.filter((link) => {
     if ((link.private === true && user) || link.private === false) return true
@@ -78,10 +77,6 @@ export const Header = () => {
         {loading ? (
           <Skeleton className="size-10 rounded-full" />
         ) : user ? (
-          // <Button variant="destructive" onClick={() => logOutUser()}>
-          //   Log Out
-          //   <IconRun stroke={2} />
-          // </Button>
           <Link to="/profile" title="Open Profile">
             <Avatar size="lg">
               <AvatarImage src={user.photoURL} />

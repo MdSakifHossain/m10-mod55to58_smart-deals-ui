@@ -1,4 +1,5 @@
 // @ts-nocheck
+import DeleteAccountButton from "@/components/my-components/DeleteAccountButton"
 import LogoutButton from "@/components/my-components/LogoutButton"
 import PageStructure from "@/components/my-components/PageStructure"
 import { Card, CardContent } from "@/components/ui/card"
@@ -13,7 +14,7 @@ export default function Profile() {
     <PageStructure className="flex flex-col items-center justify-center gap-4">
       <UserProfile loading={loading} user={user} />
       <div className="grid min-w-md grid-cols-2 gap-4">
-        <p className="rounded-md border px-1 py-1 text-sm">Delete Button</p>
+        <DeleteAccountButton />
         <LogoutButton />
       </div>
     </PageStructure>

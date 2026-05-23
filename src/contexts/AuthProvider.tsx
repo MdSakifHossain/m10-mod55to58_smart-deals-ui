@@ -32,6 +32,20 @@ export const AuthProvider = ({ children }) => {
     return signOut(auth)
   }
 
+  const deleteAccount = async () => {
+    setLoading(true)
+    try {
+      const userUid = auth.currentUser.uid
+      await deleteUser(auth.currentUser)
+      await axios.delete(`http://localhost:3000/users/${userUid}`)
+      logger("[Firebase] Account Deletion Complete")
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const syncUserToDB = async (user) => {
     const userData = {
       firebase_uid: user.uid,
@@ -46,20 +60,6 @@ export const AuthProvider = ({ children }) => {
       await axios.post("http://localhost:3000/users", userData)
     } catch (err) {
       console.error(err)
-    }
-  }
-
-  const deleteAccount = async () => {
-    setLoading(true)
-    try {
-      const userUid = auth.currentUser.uid
-      await deleteUser(auth.currentUser)
-      await axios.delete(`http://localhost:3000/users/${userUid}`)
-      logger("[Firebase] Account Deletion Complete")
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
     }
   }
 

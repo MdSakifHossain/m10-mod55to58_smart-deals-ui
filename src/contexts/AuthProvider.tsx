@@ -17,9 +17,16 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const createUserWithEmail = (email, password) => {
+  const createUserWithEmail = async (email, password) => {
     setLoading(true)
-    return createUserWithEmailAndPassword(auth, email, password)
+
+    try {
+      return await createUserWithEmailAndPassword(auth, email, password)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const loginWithEmail = (email, password) => {

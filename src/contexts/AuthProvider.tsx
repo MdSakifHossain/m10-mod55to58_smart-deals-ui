@@ -7,7 +7,7 @@ import {
   signOut,
   deleteUser,
 } from "firebase/auth"
-import { auth } from "@/firebase/firebase.init"
+import { auth } from "@/firebase.init"
 import axios from "axios"
 import logger from "@/lib/logger"
 

@@ -12,6 +12,7 @@ import axios from "axios"
 import logger from "@/lib/logger"
 
 const AuthContext = createContext(undefined)
+const API = import.meta.env.VITE_API_URL
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const userUid = auth.currentUser.uid
       await deleteUser(auth.currentUser)
-      await axios.delete(`http://localhost:3000/users/${userUid}`)
+      await axios.delete(`${API}/users/${userUid}`)
       logger("[Firebase] Account Deletion Complete")
     } catch (error) {
       console.error(error)
@@ -64,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      await axios.post("http://localhost:3000/users", userData)
+      await axios.post(`${API}/users`, userData)
     } catch (err) {
       console.error(err)
     }

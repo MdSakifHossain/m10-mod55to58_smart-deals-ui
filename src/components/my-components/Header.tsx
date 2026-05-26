@@ -40,7 +40,7 @@ const nav_links = [
 ]
 
 export const Header = () => {
-  const { user, loading } = useAuth()
+  const { user, loading, random_avatar } = useAuth()
 
   const filteredLinks = nav_links.filter((link) => {
     if ((link.private === true && user) || link.private === false) return true
@@ -80,7 +80,7 @@ export const Header = () => {
         ) : user ? (
           <Link to="/profile" title="Open Profile">
             <Avatar size="lg">
-              <AvatarImage src={user.photoURL} />
+              <AvatarImage src={user.photoURL || random_avatar} />
               <AvatarFallback>
                 <IconUser stroke={2} className="size-5" />
               </AvatarFallback>

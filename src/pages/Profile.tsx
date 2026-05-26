@@ -5,20 +5,19 @@ import PageStructure from "@/components/my-components/PageStructure"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuth } from "@/contexts/AuthProvider"
-import { getRandomAvatar } from "@/lib/getRandomAvatar"
 
 export default function Profile() {
-  const { loading, user } = useAuth()
+  const { loading, user, random_avatar } = useAuth()
 
   return (
     <PageStructure className="flex flex-col items-center justify-center gap-4">
-      <UserProfile loading={loading} user={user} />
+      <UserProfile loading={loading} user={user} profileUrl={random_avatar} />
       <AccountControls loading={loading} />
     </PageStructure>
   )
 }
 
-function UserProfile({ loading, user }) {
+function UserProfile({ loading, user, profileUrl }) {
   if (loading) {
     return (
       <Card className="min-w-md">
@@ -40,7 +39,7 @@ function UserProfile({ loading, user }) {
       <CardContent>
         <div className="flex w-fit items-center gap-4">
           <img
-            src={user.photoURL || getRandomAvatar().url}
+            src={user.photoURL || profileUrl}
             alt="Profile"
             className="size-24 rounded-full border"
           />

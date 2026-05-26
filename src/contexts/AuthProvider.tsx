@@ -10,9 +10,12 @@ import {
 import { auth } from "@/firebase.init"
 import axios from "axios"
 import logger from "@/lib/logger"
+import { getRandomAvatar } from "@/lib/getRandomAvatar"
 
 const AuthContext = createContext(undefined)
+// extra things to inside context
 const API = import.meta.env.VITE_API_URL
+const random_avatar = getRandomAvatar().url
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -92,6 +95,7 @@ export const AuthProvider = ({ children }) => {
   const authContextValues = {
     user,
     loading,
+    random_avatar,
     createUserWithEmail,
     loginWithEmail,
     logOutUser,

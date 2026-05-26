@@ -13,10 +13,7 @@ export default function Profile() {
   return (
     <PageStructure className="flex flex-col items-center justify-center gap-4">
       <UserProfile loading={loading} user={user} />
-      <div className="grid min-w-md grid-cols-2 gap-4">
-        <DeleteAccountButton />
-        <LogoutButton />
-      </div>
+      <AccountControls loading={loading} />
     </PageStructure>
   )
 }
@@ -58,5 +55,22 @@ function UserProfile({ loading, user }) {
         </div>
       </CardContent>
     </Card>
+  )
+}
+
+function AccountControls({ loading }) {
+  return (
+    <div className="grid min-w-md grid-cols-2 gap-4">
+      {loading ? (
+        Array.from({ length: 2 }).map((_, i) => (
+          <Skeleton key={i} className="h-9" />
+        ))
+      ) : (
+        <>
+          <DeleteAccountButton />
+          <LogoutButton />
+        </>
+      )}
+    </div>
   )
 }

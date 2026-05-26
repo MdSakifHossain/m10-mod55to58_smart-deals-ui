@@ -8,8 +8,8 @@ const DeleteAccountButton = () => {
   const { deleteAccount } = useAuth()
   const navigate = useNavigate()
 
-  const handleButtonPress = () => {
-    deleteAccount()
+  const handleButtonPress = async () => {
+    await deleteAccount()
     navigate("/")
   }
 

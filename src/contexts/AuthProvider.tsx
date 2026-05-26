@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
         logger("[Firebase] User Logged In")
         await syncUserToDB(currentUser)
       } else {
-        logger("[Firebase] User Logged Out")
+        logger("[Firebase] Not Logged In")
       }
 
       setUser(currentUser)

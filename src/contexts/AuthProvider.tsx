@@ -28,19 +28,36 @@ export const AuthProvider = ({ children }) => {
       return await createUserWithEmailAndPassword(auth, email, password)
     } catch (err) {
       console.error(err)
+      throw err
     } finally {
       setLoading(false)
     }
   }
 
-  const loginWithEmail = (email, password) => {
+  const loginWithEmail = async (email, password) => {
     setLoading(true)
-    return signInWithEmailAndPassword(auth, email, password)
+
+    try {
+      return await signInWithEmailAndPassword(auth, email, password)
+    } catch (err) {
+      console.error(err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const logOutUser = () => {
+  const logOutUser = async () => {
     setLoading(true)
-    return signOut(auth)
+
+    try {
+      return await signOut(auth)
+    } catch (err) {
+      console.error(err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
   }
 
   const deleteAccount = async () => {
@@ -50,8 +67,9 @@ export const AuthProvider = ({ children }) => {
       await deleteUser(auth.currentUser)
       await axios.delete(`${API}/users/${userUid}`)
       logger("[Firebase] Account Deletion Complete")
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
+      throw err
     } finally {
       setLoading(false)
     }
@@ -70,7 +88,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await axios.post(`${API}/users`, userData)
     } catch (err) {
-      console.error(err)
+      console.error("DB sync failed", err)
     }
   }
 

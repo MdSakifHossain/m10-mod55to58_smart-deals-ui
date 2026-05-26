@@ -55,7 +55,7 @@ function ProductsTable() {
 
         <TableBody>
           {[...Array(12)].map((_, i) => (
-            <TableRow className="*:text-center">
+            <TableRow key={i} className="*:text-center">
               <TableCell>{i + 1}</TableCell>
               <TableCell>
                 <Avatar className="mx-auto">

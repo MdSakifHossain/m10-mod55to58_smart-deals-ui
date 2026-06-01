@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   signOut,
   deleteUser,
+  updateProfile,
 } from "firebase/auth"
 import { auth } from "@/firebase.init"
 import axios from "axios"
@@ -92,14 +93,28 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const updateUserProfile = async (updateInfo) => {
+    setLoading(true)
+
+    try {
+      await updateProfile(auth.currentUser, updateInfo)
+      await syncUserToDB(auth.currentUser)
+    } catch (err) {
+      console.error(err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        logger("[Firebase] User Logged In")
-        await syncUserToDB(currentUser)
-      } else {
-        logger("[Firebase] Not Logged In")
-      }
+      // if (currentUser) {
+      //   logger("[Firebase] User Logged In")
+      //    await syncUserToDB(currentUser)
+      // } else {
+      //   logger("[Firebase] Not Logged In")
+      // }
 
       setUser(currentUser)
       setLoading(false)
@@ -118,6 +133,7 @@ export const AuthProvider = ({ children }) => {
     loginWithEmail,
     logOutUser,
     deleteAccount,
+    updateUserProfile,
   }
 
   return (

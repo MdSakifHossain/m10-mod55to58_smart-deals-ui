@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router"
 
 import App from "./layouts/App"
 import Unusual from "./layouts/Unusual"
+import PrivatePage from "./layouts/PrivatePage"
 
 import Homepage from "./pages/Homepage"
 import NotFound from "./pages/NotFound"
@@ -41,7 +42,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "product-details",
-        Component: ProductDetails,
+        element: (
+          <PrivatePage>
+            <ProductDetails />
+          </PrivatePage>
+        ),
       },
     ],
   },

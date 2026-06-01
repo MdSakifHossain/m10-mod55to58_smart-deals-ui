@@ -66,6 +66,8 @@ function SignupForm({ className, ...props }) {
                   Enter your email below to create your account
                 </p>
               </div>
+
+              {/* email field */}
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
@@ -76,6 +78,32 @@ function SignupForm({ className, ...props }) {
                   required
                 />
               </Field>
+
+              {/* Display Name */}
+              <Field>
+                <FieldLabel htmlFor="displayName">Display Name</FieldLabel>
+                <Input
+                  id="displayName"
+                  type="text"
+                  name="displayName"
+                  placeholder="Your Name"
+                  required
+                />
+              </Field>
+
+              {/* Avatar */}
+              <Field>
+                <FieldLabel htmlFor="avatar">Avatar</FieldLabel>
+                <Input
+                  id="avatar"
+                  type="url"
+                  name="avatar"
+                  placeholder="Avatar Image"
+                  required
+                />
+              </Field>
+
+              {/* Passowrd and confirm password */}
               <Field>
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
@@ -103,6 +131,7 @@ function SignupForm({ className, ...props }) {
                   Must be at least 8 characters long.
                 </FieldDescription>
               </Field>
+
               <Field>
                 <Button type="submit">Create Account</Button>
               </Field>

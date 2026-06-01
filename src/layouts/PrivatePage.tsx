@@ -8,9 +8,11 @@ const PrivatePage = ({ children }) => {
 
   if (loading) {
     return (
-      <p>
-        Loading... <Spinner />
-      </p>
+      <div className="flex flex-1 items-center justify-center">
+        <p className="flex items-center justify-center gap-4 text-3xl">
+          Loading.. <Spinner className="size-8" />
+        </p>
+      </div>
     )
   }
 

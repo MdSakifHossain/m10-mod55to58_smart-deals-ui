@@ -30,7 +30,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "my-products",
-        Component: MyProducts,
+        element: (
+          <PrivatePage>
+            <MyProducts />
+          </PrivatePage>
+        ),
       },
       {
         path: "my-bids",
@@ -38,7 +42,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "create-product",
-        Component: CreateProduct,
+        element: (
+          <PrivatePage>
+            <CreateProduct />
+          </PrivatePage>
+        ),
       },
       {
         path: "product-details",
@@ -64,7 +72,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "profile",
-        Component: Profile,
+        element: (
+          <PrivatePage>
+            <Profile />
+          </PrivatePage>
+        ),
       },
     ],
   },

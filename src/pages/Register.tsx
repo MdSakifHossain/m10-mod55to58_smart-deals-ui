@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
 import { Link, useNavigate } from "react-router"
 import { useAuth } from "@/contexts/AuthProvider"
+import { getRandomAvatar } from "@/lib/getRandomAvatar"
 
 export default function Register() {
   return (
@@ -27,16 +28,15 @@ export default function Register() {
 }
 
 function SignupForm({ className, ...props }) {
-  const { createUserWithEmail } = useAuth()
+  const { createUserWithEmail, updateUserProfile } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     const formData = new FormData(e.target)
-    const { email, password, confirmPassword } = Object.fromEntries(
-      formData.entries()
-    )
+    const { email, password, confirmPassword, displayName } =
+      Object.fromEntries(formData.entries())
 
     if (password !== confirmPassword) {
       return console.error(
@@ -46,6 +46,10 @@ function SignupForm({ className, ...props }) {
 
     try {
       await createUserWithEmail(email, password)
+      await updateUserProfile({
+        displayName,
+        photoURL: getRandomAvatar().url,
+      })
       navigate("/")
     } catch (err) {
       console.error(err)
@@ -87,18 +91,6 @@ function SignupForm({ className, ...props }) {
                   type="text"
                   name="displayName"
                   placeholder="Your Name"
-                  required
-                />
-              </Field>
-
-              {/* Avatar */}
-              <Field>
-                <FieldLabel htmlFor="avatar">Avatar</FieldLabel>
-                <Input
-                  id="avatar"
-                  type="url"
-                  name="avatar"
-                  placeholder="Avatar Image"
                   required
                 />
               </Field>

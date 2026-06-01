@@ -9,8 +9,13 @@ const DeleteAccountButton = () => {
   const navigate = useNavigate()
 
   const handleButtonPress = async () => {
-    await deleteAccount()
-    navigate("/")
+    try {
+      await deleteAccount()
+      navigate("/")
+    } catch (err) {
+      console.error(err)
+      alert(err)
+    }
   }
 
   return (

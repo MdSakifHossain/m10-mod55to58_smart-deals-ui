@@ -41,6 +41,7 @@ function LoginForm({ className, ...props }) {
       navigate("/")
     } catch (err) {
       console.error(err)
+      alert(err)
     }
   }
 

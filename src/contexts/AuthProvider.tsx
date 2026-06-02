@@ -10,7 +10,6 @@ import {
 } from "firebase/auth"
 import { auth } from "@/firebase.init"
 import { api } from "@/lib/api"
-import logger from "@/lib/logger"
 
 const AuthContext = createContext(undefined)
 
@@ -70,9 +69,10 @@ export const AuthProvider = ({ children }) => {
 
   const deleteAccount = async () => {
     setLoading(true)
-
+    const userUID = auth.currentUser.uid
     try {
       // delete user form DB first with api.delete() then delete from Firebase
+      await api.delete(`/users/${userUID}`)
       await deleteUser(auth.currentUser)
     } catch (err) {
       console.error(err)

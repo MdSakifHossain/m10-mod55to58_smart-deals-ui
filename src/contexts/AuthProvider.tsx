@@ -9,14 +9,8 @@ import {
   updateProfile,
 } from "firebase/auth"
 import { auth } from "@/firebase.init"
-import axios from "axios"
-import logger from "@/lib/logger"
-import { getRandomAvatar } from "@/lib/getRandomAvatar"
 
 const AuthContext = createContext(undefined)
-// extra things to inside context
-const API = import.meta.env.VITE_API_URL
-const random_avatar = getRandomAvatar().url
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -26,7 +20,9 @@ export const AuthProvider = ({ children }) => {
     setLoading(true)
 
     try {
-      return await createUserWithEmailAndPassword(auth, email, password)
+      const result = await createUserWithEmailAndPassword(auth, email, password)
+      // create user in DB with nullish props with api.post()
+      return result
     } catch (err) {
       console.error(err)
       throw err
@@ -39,7 +35,9 @@ export const AuthProvider = ({ children }) => {
     setLoading(true)
 
     try {
-      return await signInWithEmailAndPassword(auth, email, password)
+      const result = await signInWithEmailAndPassword(auth, email, password)
+      // NO NEED to sync do DB when user logs in.
+      return result
     } catch (err) {
       console.error(err)
       throw err
@@ -63,11 +61,10 @@ export const AuthProvider = ({ children }) => {
 
   const deleteAccount = async () => {
     setLoading(true)
+
     try {
-      const userUid = auth.currentUser.uid
+      // delete user form DB first with api.delete() then delete from Firebase
       await deleteUser(auth.currentUser)
-      await axios.delete(`${API}/users/${userUid}`)
-      logger("[Firebase] Account Deletion Complete")
     } catch (err) {
       console.error(err)
       throw err
@@ -76,29 +73,29 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const syncUserToDB = async (user) => {
-    const userData = {
-      firebase_uid: user.uid,
-      user_name: user.displayName,
-      user_image: user.photoURL,
-      user_location: null,
-      user_phone: user.phoneNumber,
-      user_email: user.email,
-    }
+  // const syncUserToDB = async (user) => {
+  //   const userData = {
+  //     firebase_uid: user.uid,
+  //     user_name: user.displayName,
+  //     user_image: user.photoURL,
+  //     user_location: null,
+  //     user_phone: user.phoneNumber,
+  //     user_email: user.email,
+  //   }
 
-    try {
-      await axios.post(`${API}/users`, userData)
-    } catch (err) {
-      console.error("DB sync failed", err)
-    }
-  }
+  //   try {
+  //     await axios.post(`${API}/users`, userData)
+  //   } catch (err) {
+  //     console.error("DB sync failed", err)
+  //   }
+  // }
 
   const updateUserProfile = async (updateInfo) => {
     setLoading(true)
 
     try {
       await updateProfile(auth.currentUser, updateInfo)
-      await syncUserToDB(auth.currentUser)
+      // update user data in DB with updated info using api.patch()
     } catch (err) {
       console.error(err)
       throw err
@@ -111,7 +108,6 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       // if (currentUser) {
       //   logger("[Firebase] User Logged In")
-      //    await syncUserToDB(currentUser)
       // } else {
       //   logger("[Firebase] Not Logged In")
       // }
@@ -128,7 +124,6 @@ export const AuthProvider = ({ children }) => {
   const authContextValues = {
     user,
     loading,
-    random_avatar,
     createUserWithEmail,
     loginWithEmail,
     logOutUser,

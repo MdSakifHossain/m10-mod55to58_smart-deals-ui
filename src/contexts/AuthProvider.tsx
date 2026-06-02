@@ -9,6 +9,8 @@ import {
   updateProfile,
 } from "firebase/auth"
 import { auth } from "@/firebase.init"
+import { api } from "@/lib/api"
+import logger from "@/lib/logger"
 
 const AuthContext = createContext(undefined)
 
@@ -21,7 +23,14 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
-      // create user in DB with nullish props with api.post()
+      await api.post("/users", {
+        firebase_uid: result?.user?.uid,
+        user_name: result?.user?.displayName,
+        user_image: result?.user?.photoURL,
+        user_location: null,
+        user_phone: result?.user?.phoneNumber,
+        user_email: result?.user?.email,
+      })
       return result
     } catch (err) {
       console.error(err)

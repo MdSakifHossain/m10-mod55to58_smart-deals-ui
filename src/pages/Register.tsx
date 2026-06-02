@@ -12,7 +12,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
+import { IconBrandGoogleFilled } from "@tabler/icons-react"
 import { Link, useNavigate } from "react-router"
 import { useAuth } from "@/contexts/AuthProvider"
 import { getRandomAvatar } from "@/lib/getRandomAvatar"

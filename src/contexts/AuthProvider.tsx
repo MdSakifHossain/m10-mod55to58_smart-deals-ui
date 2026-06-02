@@ -10,6 +10,7 @@ import {
 } from "firebase/auth"
 import { auth } from "@/firebase.init"
 import { api } from "@/lib/api"
+import logger from "@/lib/logger"
 
 const AuthContext = createContext(undefined)
 
@@ -44,21 +45,6 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
-
-      // Silent safety net: ensure DB record exists
-      // If record exists: backend returns isNewUser: false, no DB write
-      // If record missing: backend creates it, you recover gracefully
-      await api
-        .post("/users", {
-          firebase_uid: result.user.uid,
-          user_name: result.user.displayName,
-          user_image: result.user.photoURL,
-          user_email: result.user.email,
-          user_location: null,
-          user_phone: result.user.phoneNumber,
-        })
-        .catch(() => {}) // Silently ignore failures — this is just a safety net
-
       return result
     } catch (err) {
       console.error(err)

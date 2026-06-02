@@ -118,7 +118,10 @@ export const AuthProvider = ({ children }) => {
 
     try {
       await updateProfile(auth.currentUser, updateInfo)
-      // update user data in DB with updated info using api.patch()
+      await api.patch(`/users/${auth.currentUser.uid}`, {
+        user_name: updateInfo.displayName,
+        user_image: updateInfo.photoURL,
+      })
     } catch (err) {
       console.error(err)
       throw err

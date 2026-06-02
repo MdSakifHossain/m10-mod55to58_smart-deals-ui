@@ -12,7 +12,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { IconBrandGoogleFilled, IconSpider } from "@tabler/icons-react"
+import { IconBrandGoogleFilled } from "@tabler/icons-react"
 import { Link, useNavigate } from "react-router"
 import { useAuth } from "@/contexts/AuthProvider"
 
@@ -89,14 +89,14 @@ function LoginForm({ className, ...props }) {
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
               </FieldSeparator>
-              <Field className="grid grid-cols-2 gap-4">
-                <Button variant="outline" type="button">
-                  <IconBrandGoogleFilled />
-                  <span className="sr-only">Login with Google</span>
-                </Button>
-                <Button variant="outline" type="button" disabled>
-                  <IconSpider />
-                  <span className="sr-only">Login with Spider</span>
+              <Field>
+                <Button
+                  variant="outline"
+                  type="button"
+                  className="flex items-center justify-center gap-3"
+                >
+                  <IconBrandGoogleFilled className="size-5" />
+                  <span>Sign-In with Google</span>
                 </Button>
               </Field>
               <FieldDescription className="text-center">

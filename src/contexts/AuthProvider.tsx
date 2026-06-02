@@ -10,7 +10,6 @@ import {
 } from "firebase/auth"
 import { auth } from "@/firebase.init"
 import { api } from "@/lib/api"
-import logger from "@/lib/logger"
 
 const AuthContext = createContext(undefined)
 
@@ -81,23 +80,6 @@ export const AuthProvider = ({ children }) => {
       setLoading(false)
     }
   }
-
-  // const syncUserToDB = async (user) => {
-  //   const userData = {
-  //     firebase_uid: user.uid,
-  //     user_name: user.displayName,
-  //     user_image: user.photoURL,
-  //     user_location: null,
-  //     user_phone: user.phoneNumber,
-  //     user_email: user.email,
-  //   }
-
-  //   try {
-  //     await axios.post(`${API}/users`, userData)
-  //   } catch (err) {
-  //     console.error("DB sync failed", err)
-  //   }
-  // }
 
   const updateUserProfile = async (updateInfo) => {
     setLoading(true)

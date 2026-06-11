@@ -7,11 +7,15 @@ import {
   signOut,
   deleteUser,
   updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth"
 import { auth } from "@/firebase.init"
 import { api } from "@/lib/api"
 
 const AuthContext = createContext(undefined)
+
+const googleProvider = new GoogleAuthProvider()
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -98,6 +102,42 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const loginWithGoogle = async () => {
+    setLoading(true)
+
+    try {
+      const result = await signInWithPopup(auth, googleProvider)
+
+      let exists = true
+
+      try {
+        const dbUser = await api.get(`/users/firebase/${result.user.uid}`)
+
+        exists = !!dbUser.data
+      } catch (err) {
+        exists = false
+      }
+
+      if (!exists) {
+        await api.post("/users", {
+          firebase_uid: result.user.uid,
+          user_name: result.user.displayName,
+          user_image: result.user.photoURL,
+          user_location: null,
+          user_phone: result.user.phoneNumber,
+          user_email: result.user.email,
+        })
+      }
+
+      return result
+    } catch (err) {
+      console.error(err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       // if (currentUser) {
@@ -123,6 +163,7 @@ export const AuthProvider = ({ children }) => {
     logOutUser,
     deleteAccount,
     updateUserProfile,
+    loginWithGoogle,
   }
 
   return (

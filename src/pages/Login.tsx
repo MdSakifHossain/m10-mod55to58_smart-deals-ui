@@ -12,9 +12,9 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { IconBrandGoogleFilled } from "@tabler/icons-react"
 import { Link, useNavigate } from "react-router"
 import { useAuth } from "@/contexts/AuthProvider"
+import GoogleLoginButton from "@/components/my-components/GoogleLoginButton"
 
 export default function Login() {
   return (
@@ -90,14 +90,7 @@ function LoginForm({ className, ...props }) {
                 Or continue with
               </FieldSeparator>
               <Field>
-                <Button
-                  variant="outline"
-                  type="button"
-                  className="flex items-center justify-center gap-3"
-                >
-                  <IconBrandGoogleFilled className="size-5" />
-                  <span>Sign-In with Google</span>
-                </Button>
+                <GoogleLoginButton />
               </Field>
               <FieldDescription className="text-center">
                 Don&apos;t have an account? <Link to="/register">Register</Link>

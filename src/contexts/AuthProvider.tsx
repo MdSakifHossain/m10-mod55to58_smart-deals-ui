@@ -21,19 +21,41 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  // -------------------------
+  // DB helper (single source of truth)
+  // -------------------------
+  const ensureUserInDB = async (firebaseUser) => {
+    try {
+      const res = await api.get(`/users/firebase/${firebaseUser.uid}`)
+      if (res.data) return res.data
+    } catch {
+      // just ignore this shit. i dont have to do any clg or something like this
+    }
+
+    const newUser = {
+      firebase_uid: firebaseUser.uid,
+      user_name: firebaseUser.displayName,
+      user_image: firebaseUser.photoURL,
+      user_location: null,
+      user_phone: firebaseUser.phoneNumber,
+      user_email: firebaseUser.email,
+    }
+
+    await api.post("/users", newUser)
+    return newUser
+  }
+
+  // -------------------------
+  // EMAIL SIGNUP
+  // -------------------------
   const createUserWithEmail = async (email, password) => {
     setLoading(true)
 
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
-      await api.post("/users", {
-        firebase_uid: result?.user?.uid,
-        user_name: result?.user?.displayName,
-        user_image: result?.user?.photoURL,
-        user_location: null,
-        user_phone: result?.user?.phoneNumber,
-        user_email: result?.user?.email,
-      })
+
+      await ensureUserInDB(result.user)
+
       return result
     } catch (err) {
       console.error(err)
@@ -43,6 +65,9 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  // -------------------------
+  // EMAIL LOGIN
+  // -------------------------
   const loginWithEmail = async (email, password) => {
     setLoading(true)
 
@@ -57,6 +82,29 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  // -------------------------
+  // GOOGLE LOGIN (clean)
+  // -------------------------
+  const loginWithGoogle = async () => {
+    setLoading(true)
+
+    try {
+      const result = await signInWithPopup(auth, googleProvider)
+
+      await ensureUserInDB(result.user)
+
+      return result
+    } catch (err) {
+      console.error(err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // -------------------------
+  // LOGOUT
+  // -------------------------
   const logOutUser = async () => {
     setLoading(true)
 
@@ -70,12 +118,16 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  // -------------------------
+  // DELETE ACCOUNT
+  // -------------------------
   const deleteAccount = async () => {
     setLoading(true)
-    const userUID = auth.currentUser.uid
+
     try {
-      // delete user form DB first with api.delete() then delete from Firebase
-      await api.delete(`/users/${userUID}`)
+      const uid = auth.currentUser.uid
+
+      await api.delete(`/users/${uid}`)
       await deleteUser(auth.currentUser)
     } catch (err) {
       console.error(err)
@@ -85,11 +137,15 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  // -------------------------
+  // UPDATE PROFILE
+  // -------------------------
   const updateUserProfile = async (updateInfo) => {
     setLoading(true)
 
     try {
       await updateProfile(auth.currentUser, updateInfo)
+
       await api.patch(`/users/${auth.currentUser.uid}`, {
         user_name: updateInfo.displayName,
         user_image: updateInfo.photoURL,
@@ -102,42 +158,9 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const loginWithGoogle = async () => {
-    setLoading(true)
-
-    try {
-      const result = await signInWithPopup(auth, googleProvider)
-
-      let exists = true
-
-      try {
-        const dbUser = await api.get(`/users/firebase/${result.user.uid}`)
-
-        exists = !!dbUser.data
-      } catch (err) {
-        exists = false
-      }
-
-      if (!exists) {
-        await api.post("/users", {
-          firebase_uid: result.user.uid,
-          user_name: result.user.displayName,
-          user_image: result.user.photoURL,
-          user_location: null,
-          user_phone: result.user.phoneNumber,
-          user_email: result.user.email,
-        })
-      }
-
-      return result
-    } catch (err) {
-      console.error(err)
-      throw err
-    } finally {
-      setLoading(false)
-    }
-  }
-
+  // -------------------------
+  // AUTH STATE LISTENER
+  // -------------------------
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       // if (currentUser) {
@@ -150,20 +173,21 @@ export const AuthProvider = ({ children }) => {
       setLoading(false)
     })
 
-    return () => {
-      unsubscribe()
-    }
+    return () => unsubscribe()
   }, [])
 
+  // -------------------------
+  // CONTEXT VALUE
+  // -------------------------
   const authContextValues = {
     user,
     loading,
     createUserWithEmail,
     loginWithEmail,
+    loginWithGoogle,
     logOutUser,
     deleteAccount,
     updateUserProfile,
-    loginWithGoogle,
   }
 
   return (

@@ -83,6 +83,7 @@ function Fooorm() {
             id="title"
             type="text"
             placeholder="e.g. Yamaha Fz Guitar for Sale"
+            className="px-4 py-5.5"
             required
           />
         </FieldWithTilte>
@@ -101,7 +102,13 @@ function Fooorm() {
       </TwoColGrid>
       {/* Min Price  */}
       <FieldWithTilte id="min_price" label="Min Price You want to Sale ($)">
-        <Input id="min_price" type="number" placeholder="e.g. 18.5" required />
+        <Input
+          id="min_price"
+          type="number"
+          placeholder="e.g. 18.5"
+          required
+          className="px-4 py-5.5"
+        />
       </FieldWithTilte>
       {/* product condition && usage time */}
       <TwoColGrid>
@@ -146,7 +153,13 @@ function Fooorm() {
       </TwoColGrid>
       {/* Image URL */}
       <FieldWithTilte id="image_url" label="Your Product Image URL">
-        <Input id="image_url" placeholder="https://..." type="url" required />
+        <Input
+          id="image_url"
+          placeholder="https://..."
+          type="url"
+          required
+          className="px-4 py-5.5"
+        />
       </FieldWithTilte>
       {/* Product Description */}
       <FieldWithTilte
@@ -154,7 +167,7 @@ function Fooorm() {
         label="Simple Description about your Product"
       >
         <Textarea
-          className="min-h-48 resize-y"
+          className="min-h-48 resize-y px-4 py-3"
           id="product_description"
           placeholder="e.g. I bought this product 3 month ago. did not used more than 1/2 time. actually learning guitar is so tough..... "
         />

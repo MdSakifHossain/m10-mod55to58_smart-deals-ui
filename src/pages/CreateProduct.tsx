@@ -64,7 +64,6 @@ function Fooorm() {
     const doTheThing = async () => {
       try {
         const res = await axios.get("/category.json")
-        console.log(res.data)
         setCategories(res.data)
       } catch (err) {
         console.error(err)

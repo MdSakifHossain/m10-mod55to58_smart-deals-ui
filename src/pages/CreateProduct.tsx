@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 
-import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { FieldContent, FieldTitle } from "@/components/ui/field"
 
 export default function CreateProduct() {
   return (
@@ -99,30 +99,36 @@ function Fooorm() {
           </NativeSelect>
         </FieldWithTilte>
       </TwoColGrid>
-
       {/* Min Price  */}
       <FieldWithTilte id="min_price" label="Min Price You want to Sale ($)">
         <Input id="min_price" type="number" placeholder="e.g. 18.5" required />
       </FieldWithTilte>
-
       {/* product condition && usage time */}
       <TwoColGrid>
         {/* Product Condition  */}
         <FieldWithTilte id="product_condition" label="Product Condition">
           <RadioGroup
-            defaultValue="new"
-            className="flex w-fit items-center gap-6"
             value={condition}
             onChange={(e) => setCondition(e.target.value)}
+            className="flex"
           >
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="new" id="r1" />
-              <Label htmlFor="r1">Brand New</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <RadioGroupItem value="used" id="r2" />
-              <Label htmlFor="r2">Used</Label>
-            </div>
+            <FieldLabel htmlFor="new">
+              <Field orientation="horizontal">
+                <RadioGroupItem value="new" id="new" />
+                <FieldContent>
+                  <FieldTitle>Brand New</FieldTitle>
+                </FieldContent>
+              </Field>
+            </FieldLabel>
+
+            <FieldLabel htmlFor="used">
+              <Field orientation="horizontal">
+                <RadioGroupItem value="used" id="used" />
+                <FieldContent>
+                  <FieldTitle>Used</FieldTitle>
+                </FieldContent>
+              </Field>
+            </FieldLabel>
           </RadioGroup>
         </FieldWithTilte>
 
@@ -132,17 +138,16 @@ function Fooorm() {
             id="usage_time"
             type="text"
             placeholder="e.g. 1 year 3 month "
+            className="px-4 py-5.5"
             required
             disabled={condition === "new"}
           />
         </FieldWithTilte>
       </TwoColGrid>
-
       {/* Image URL */}
       <FieldWithTilte id="image_url" label="Your Product Image URL">
         <Input id="image_url" placeholder="https://..." type="url" required />
       </FieldWithTilte>
-
       {/* Product Description */}
       <FieldWithTilte
         id="product_description"

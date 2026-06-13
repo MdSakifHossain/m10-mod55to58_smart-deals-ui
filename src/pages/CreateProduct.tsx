@@ -58,6 +58,7 @@ function FieldWithTilte({ id, label = "Label is REQUIRED", children }) {
 
 function Fooorm() {
   const [categories, setCategories] = useState([])
+  const [condition, setCondition] = useState("new") // "new" or "used"
 
   useEffect(() => {
     const doTheThing = async () => {
@@ -111,6 +112,8 @@ function Fooorm() {
           <RadioGroup
             defaultValue="new"
             className="flex w-fit items-center gap-6"
+            value={condition}
+            onChange={(e) => setCondition(e.target.value)}
           >
             <div className="flex items-center gap-3">
               <RadioGroupItem value="new" id="r1" />
@@ -130,6 +133,7 @@ function Fooorm() {
             type="text"
             placeholder="e.g. 1 year 3 month "
             required
+            disabled={condition === "new"}
           />
         </FieldWithTilte>
       </TwoColGrid>

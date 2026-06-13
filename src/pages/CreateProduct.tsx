@@ -171,7 +171,7 @@ function Fooorm() {
       <FieldWithTilte id="image_url" label="Your Product Image URL">
         <Input
           id="image_url"
-          placeholder="https://..."
+          placeholder="https://"
           type="url"
           required
           className="px-4 py-5.5"

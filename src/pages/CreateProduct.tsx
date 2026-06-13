@@ -72,8 +72,22 @@ function Fooorm() {
     doTheThing()
   }, [])
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const formData = new FormData(e.target)
+    const data = Object.fromEntries(formData.entries())
+    const newProductObj = {
+      ...data,
+      condition,
+      usage_time: data.usage_time ? data.usage_time : null,
+    }
+
+    console.log(newProductObj)
+  }
+
   return (
-    <form className="grid grid-cols-1 gap-8">
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-8">
       {/* Title && Category */}
       <TwoColGrid>
         {/* Title */}
@@ -84,12 +98,13 @@ function Fooorm() {
             placeholder="e.g. Yamaha Fz Guitar for Sale"
             className="px-4 py-5.5"
             required
+            name="title"
           />
         </FieldWithTilte>
 
         {/* Category */}
         <FieldWithTilte id="category" label="Category">
-          <NativeSelect id="category">
+          <NativeSelect id="category" name="category">
             <NativeSelectOption value="">Select a Category</NativeSelectOption>
             {categories.map((item) => (
               <NativeSelectOption key={item._id} value={item.slug}>
@@ -107,6 +122,7 @@ function Fooorm() {
           placeholder="e.g. 18.5"
           required
           className="px-4 py-5.5"
+          name="min_price"
         />
       </FieldWithTilte>
       {/* product condition && usage time */}
@@ -147,6 +163,7 @@ function Fooorm() {
             className="px-4 py-5.5"
             required
             disabled={condition === "new"}
+            name="usage_time"
           />
         </FieldWithTilte>
       </TwoColGrid>
@@ -158,6 +175,7 @@ function Fooorm() {
           type="url"
           required
           className="px-4 py-5.5"
+          name="image_url"
         />
       </FieldWithTilte>
       {/* Product Description */}
@@ -169,6 +187,7 @@ function Fooorm() {
           className="min-h-48 resize-y px-4 py-3"
           id="product_description"
           placeholder="e.g. I bought this product 3 month ago. did not used more than 1/2 time. actually learning guitar is so tough..... "
+          name="description"
         />
       </FieldWithTilte>
 

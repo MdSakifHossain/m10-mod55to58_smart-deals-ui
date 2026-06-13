@@ -33,7 +33,7 @@ export default function CreateProduct() {
 
       {/* Card */}
       <Card className="w-full max-w-5xl">
-        <CardContent className="p-6">
+        <CardContent className="pt-4">
           <Fooorm />
         </CardContent>
       </Card>

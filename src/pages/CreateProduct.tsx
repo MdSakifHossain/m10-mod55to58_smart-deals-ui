@@ -80,28 +80,10 @@ function Fooorm() {
         </FieldWithTilte>
       </TwoColGrid>
 
-      {/* Min && Max Price */}
-      <TwoColGrid>
-        {/* Min Price  */}
-        <FieldWithTilte id="min_price" label="Min Price You want to Sale ($)">
-          <Input
-            id="min_price"
-            type="number"
-            placeholder="e.g. 18.5"
-            required
-          />
-        </FieldWithTilte>
-
-        {/* Max Price */}
-        <FieldWithTilte id="max_price" label="Max Price You want to Sale ($)">
-          <Input
-            id="max_price"
-            type="number"
-            placeholder="Optional (default = Min Price)"
-            required
-          />
-        </FieldWithTilte>
-      </TwoColGrid>
+      {/* Min Price  */}
+      <FieldWithTilte id="min_price" label="Min Price You want to Sale ($)">
+        <Input id="min_price" type="number" placeholder="e.g. 18.5" required />
+      </FieldWithTilte>
 
       {/* product condition && usage time */}
       <TwoColGrid>
@@ -136,53 +118,6 @@ function Fooorm() {
       {/* Image URL */}
       <FieldWithTilte id="image_url" label="Your Product Image URL">
         <Input id="image_url" placeholder="https://..." type="url" required />
-      </FieldWithTilte>
-
-      {/* Seller Name && Email */}
-      <TwoColGrid>
-        <FieldWithTilte id="seller_name" label="Seller Name">
-          <Input
-            id="seller_name"
-            type="text"
-            placeholder="e.g. Artisan Roasters"
-            required
-          />
-        </FieldWithTilte>
-
-        <FieldWithTilte id="seller_email" label="Seller Email">
-          <Input
-            id="seller_email"
-            type="email"
-            placeholder="leli31955@nrlord.com"
-            required
-          />
-        </FieldWithTilte>
-      </TwoColGrid>
-
-      {/* Seller Contact && Image URL */}
-      <TwoColGrid>
-        <FieldWithTilte id="seller_contact" label="Seller Contact">
-          <Input
-            id="seller_contact"
-            type="tel"
-            placeholder="e.g. +1-555-1234"
-            required
-          />
-        </FieldWithTilte>
-
-        <FieldWithTilte id="seller_image_url" label="Seller Image URL">
-          <Input
-            id="seller_image_url"
-            type="url"
-            placeholder="https://..."
-            required
-          />
-        </FieldWithTilte>
-      </TwoColGrid>
-
-      {/* Location */}
-      <FieldWithTilte id="location" label="Location">
-        <Input id="location" placeholder="City, Country" type="text" required />
       </FieldWithTilte>
 
       {/* Product Description */}

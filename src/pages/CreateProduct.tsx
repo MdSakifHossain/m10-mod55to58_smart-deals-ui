@@ -1,3 +1,4 @@
+// @ts-nocheck
 import PageStructure from "@/components/my-components/PageStructure"
 import { buttonVariants } from "@/components/ui/button"
 import { IconArrowNarrowLeftDashed } from "@tabler/icons-react"
@@ -12,6 +13,8 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
+import axios from "axios"
+import { useEffect, useState } from "react"
 
 export default function CreateProduct() {
   return (
@@ -54,6 +57,21 @@ function FieldWithTilte({ id, label = "Label is REQUIRED", children }) {
 }
 
 function Fooorm() {
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    const doTheThing = async () => {
+      try {
+        const res = await axios.get("/category.json")
+        console.log(res.data)
+        setCategories(res.data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    doTheThing()
+  }, [])
+
   return (
     <form className="grid grid-cols-1 gap-8">
       {/* Title && Category */}
@@ -72,10 +90,11 @@ function Fooorm() {
         <FieldWithTilte id="category" label="Category">
           <NativeSelect id="category">
             <NativeSelectOption value="">Select a Category</NativeSelectOption>
-            <NativeSelectOption value="c1">c1</NativeSelectOption>
-            <NativeSelectOption value="c2">c2</NativeSelectOption>
-            <NativeSelectOption value="c3">c3</NativeSelectOption>
-            <NativeSelectOption value="c4">c4</NativeSelectOption>
+            {categories.map((item) => (
+              <NativeSelectOption key={item._id} value={item.slug}>
+                {item.icon} {item.name}
+              </NativeSelectOption>
+            ))}
           </NativeSelect>
         </FieldWithTilte>
       </TwoColGrid>

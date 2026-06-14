@@ -2,7 +2,7 @@
 import PageStructure from "@/components/my-components/PageStructure"
 import { buttonVariants } from "@/components/ui/button"
 import { IconArrowNarrowLeftDashed } from "@tabler/icons-react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -62,6 +62,7 @@ function Fooorm() {
   const [categories, setCategories] = useState([])
   const [condition, setCondition] = useState("fresh") // "fresh" or "used"
   const { user } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const doTheThing = async () => {
@@ -90,6 +91,7 @@ function Fooorm() {
     try {
       await api.post("/products", newProductObj)
       e.target.reset()
+      navigate("/all-products")
       alert("Product Added")
     } catch (err) {
       console.error(err)

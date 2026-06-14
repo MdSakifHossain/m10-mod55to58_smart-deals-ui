@@ -42,7 +42,12 @@ export const AuthProvider = ({ children }) => {
     }
 
     await api.post("/users", newUser)
-    return newUser
+
+    const { data: createdUser } = await api.get(
+      `/users/firebase/${firebaseUser.uid}`
+    )
+
+    return createdUser
   }
 
   // -------------------------
@@ -53,9 +58,6 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
-
-      await ensureUserInDB(result.user)
-
       return result
     } catch (err) {
       console.error(err)
@@ -90,8 +92,6 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const result = await signInWithPopup(auth, googleProvider)
-
-      await ensureUserInDB(result.user)
 
       return result
     } catch (err) {
@@ -163,13 +163,18 @@ export const AuthProvider = ({ children }) => {
   // -------------------------
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      // if (currentUser) {
-      //   logger("[Firebase] User Logged In")
-      // } else {
-      //   logger("[Firebase] Not Logged In")
-      // }
+      if (!currentUser) {
+        setUser(null)
+        setLoading(false)
+        return
+      }
 
-      setUser(currentUser)
+      const dbUser = await ensureUserInDB(currentUser)
+
+      setUser({
+        firebaseUser: currentUser,
+        dbUser,
+      })
       setLoading(false)
     })
 

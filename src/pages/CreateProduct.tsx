@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { FieldContent, FieldTitle } from "@/components/ui/field"
+import { api } from "@/lib/api"
+import { useAuth } from "@/contexts/AuthProvider"
 
 export default function CreateProduct() {
   return (
@@ -58,7 +60,8 @@ function FieldWithTilte({ id, label = "Label is REQUIRED", children }) {
 
 function Fooorm() {
   const [categories, setCategories] = useState([])
-  const [condition, setCondition] = useState("new") // "new" or "used"
+  const [condition, setCondition] = useState("fresh") // "fresh" or "used"
+  const { user } = useAuth()
 
   useEffect(() => {
     const doTheThing = async () => {
@@ -72,18 +75,25 @@ function Fooorm() {
     doTheThing()
   }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     const formData = new FormData(e.target)
     const data = Object.fromEntries(formData.entries())
     const newProductObj = {
-      ...data,
+      seller_id: user.dbUser._id,
+      ...data, // title, description, image, price_min, category,
       condition,
-      usage_time: data.usage_time ? data.usage_time : null,
+      usage_time: data.usage ? data.usage : null,
     }
 
-    console.log(newProductObj)
+    try {
+      await api.post("/products", newProductObj)
+      e.target.reset()
+      alert("Product Added")
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
@@ -117,12 +127,12 @@ function Fooorm() {
       {/* Min Price  */}
       <FieldWithTilte id="min_price" label="Min Price You want to Sale ($)">
         <Input
-          id="min_price"
+          id="price_min"
           type="number"
           placeholder="e.g. 18.5"
           required
           className="px-4 py-5.5"
-          name="min_price"
+          name="price_min"
         />
       </FieldWithTilte>
       {/* product condition && usage time */}
@@ -134,11 +144,11 @@ function Fooorm() {
             onChange={(e) => setCondition(e.target.value)}
             className="flex"
           >
-            <FieldLabel htmlFor="new">
+            <FieldLabel htmlFor="fresh">
               <Field orientation="horizontal">
-                <RadioGroupItem value="new" id="new" />
+                <RadioGroupItem value="fresh" id="fresh" />
                 <FieldContent>
-                  <FieldTitle>Brand New</FieldTitle>
+                  <FieldTitle>Fresh</FieldTitle>
                 </FieldContent>
               </Field>
             </FieldLabel>
@@ -157,25 +167,25 @@ function Fooorm() {
         {/* Usage Time */}
         <FieldWithTilte id="usage_time" label="Product Usage time">
           <Input
-            id="usage_time"
+            id="usage"
             type="text"
             placeholder="e.g. 1 year 3 month "
             className="px-4 py-5.5"
             required
-            disabled={condition === "new"}
-            name="usage_time"
+            disabled={condition === "fresh"}
+            name="usage"
           />
         </FieldWithTilte>
       </TwoColGrid>
       {/* Image URL */}
       <FieldWithTilte id="image_url" label="Your Product Image URL">
         <Input
-          id="image_url"
+          id="image"
           placeholder="https://"
           type="url"
           required
           className="px-4 py-5.5"
-          name="image_url"
+          name="image"
         />
       </FieldWithTilte>
       {/* Product Description */}

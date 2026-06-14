@@ -80,7 +80,9 @@ export const Header = () => {
         ) : user ? (
           <Link to="/profile" title="Open Profile">
             <Avatar size="lg">
-              <AvatarImage src={user.photoURL || random_avatar} />
+              <AvatarImage
+                src={user?.firebaseUser?.photoURL || random_avatar}
+              />
               <AvatarFallback>
                 <IconUser stroke={2} className="size-5" />
               </AvatarFallback>

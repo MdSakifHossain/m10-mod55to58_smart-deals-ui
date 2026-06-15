@@ -5,7 +5,7 @@ import {
   IconCheck,
   IconTrashFilled,
 } from "@tabler/icons-react"
-import { Link } from "react-router"
+import { Link, useLoaderData } from "react-router"
 import {
   Card,
   CardContent,
@@ -37,19 +37,28 @@ import { Input } from "@/components/ui/input"
 import { Field, FieldLabel } from "@/components/ui/field"
 
 export default function ProductDetails() {
+  const { product, seller_info } = useLoaderData()
+  console.log(seller_info, product)
+
   return (
     <PageStructure className="grid grid-cols-1 gap-20">
       <div className="grid grid-cols-7 gap-10">
         <LeftSide>
-          <img src="https://placehold.co/1280x720" alt="Product Image" />
-          <DescriptionCard />
+          <div className="flex h-[50svh] w-full items-center justify-center">
+            <img
+              src={product ? product?.image : "https://placehold.co/1280x720"}
+              alt="Product Image"
+              className="w-6/12 rounded-2xl"
+            />
+          </div>
+          <DescriptionCard product={product} />
         </LeftSide>
 
         <RightSide>
-          <NavNameAndBadge />
-          <StartingPriceCard />
-          <ProductIdAndPostedOnCard />
-          <SellerInfoCard />
+          <NavNameAndBadge product={product} />
+          <StartingPriceCard product={product} />
+          <ProductIdAndPostedOnCard product={product} />
+          <SellerInfoCard sellerInfo={seller_info} product={product} />
 
           <BiddingDialogue>
             <Button size="lg" className="text-base font-semibold">
@@ -78,7 +87,7 @@ function RightSide({ children }) {
   return <div className="col-span-4 flex flex-col gap-6">{children}</div>
 }
 
-function DescriptionCard() {
+function DescriptionCard({ product }) {
   return (
     <Card className="w-full">
       <CardHeader>
@@ -86,29 +95,25 @@ function DescriptionCard() {
       </CardHeader>
       <CardContent className="grid grid-cols-2 gap-4 text-base font-bold">
         <p>
-          <span className="text-primary">Condition: </span> New
+          <span className="text-primary">Condition: </span>
+          <span className="capitalize">{product.condition}</span>
         </p>
 
-        <p>
-          <span className="text-primary">Usage Time: </span> 3 Month
-        </p>
+        {product?.usage && (
+          <p>
+            <span className="text-primary">Usage Time: </span> {product?.usage}
+          </p>
+        )}
       </CardContent>
+
       <CardFooter className="text-muted-foreground">
-        It is a long established fact that a reader will be distracted by the
-        readable content of a page when looking at its layout. The point of
-        using Lorem Ipsum is that it has a more-or-less normal distribution of
-        letters, as opposed to using 'Content here, content here', making it
-        look like readable English. Many desktop publishing packages and web
-        page editors now use Lorem Ipsum as their default model text, and a
-        search for 'lorem ipsum' will uncover many web sites still in their
-        infancy. Various versions have evolved over the years, sometimes by
-        accident, sometimes on purpose (injected humour and the like).
+        {product?.description}
       </CardFooter>
     </Card>
   )
 }
 
-function NavNameAndBadge() {
+function NavNameAndBadge({ product }) {
   return (
     <div className="flex flex-col items-start gap-4">
       <Link
@@ -118,19 +123,21 @@ function NavNameAndBadge() {
         <IconArrowNarrowLeftDashed />
         Back to Products
       </Link>
-      <p className="text-5xl">Yamaha Fz Guitar For Sale</p>
+      <p className="text-5xl">{product?.title}</p>
       <Badge variant="outline" className="rounded-full">
-        Art and Hobbies
+        {product?.category}
       </Badge>
     </div>
   )
 }
 
-function StartingPriceCard() {
+function StartingPriceCard({ product }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-3xl font-bold">$22.5 - $30</CardTitle>
+        <CardTitle className="text-3xl font-bold">
+          ${product.price_min}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-base">Price starts from here.</p>
@@ -139,7 +146,14 @@ function StartingPriceCard() {
   )
 }
 
-function ProductIdAndPostedOnCard() {
+function ProductIdAndPostedOnCard({ product }) {
+  const isoString = product.created_at
+  const date = new Date(isoString)
+  const day = date.getUTCDate().toString().padStart(2, "0")
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, "0")
+  const year = date.getUTCFullYear()
+  const formattedDate = `${day}/${month}/${year}`
+
   return (
     <Card>
       <CardHeader>
@@ -147,18 +161,18 @@ function ProductIdAndPostedOnCard() {
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <p className="font-base">
-          <span className="font-semibold">Product ID:</span>{" "}
-          68f753ae2174ca368ec882f4
+          <span className="font-semibold">Product ID:</span>
+          {product._id}
         </p>
         <p className="font-base">
-          <span className="font-semibold">Posted:</span> 10/19/2024
+          <span className="font-semibold">Posted:</span> {formattedDate}
         </p>
       </CardContent>
     </Card>
   )
 }
 
-function SellerInfoCard() {
+function SellerInfoCard({ sellerInfo, product }) {
   return (
     <Card>
       <CardHeader>
@@ -170,26 +184,31 @@ function SellerInfoCard() {
         {/* seller handle */}
         <div className="flex items-center gap-4">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={sellerInfo.user_image} />
+            <AvatarFallback>{sellerInfo.user_name.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-semibold">Sara Chen</p>
-            <p className="text-muted-foreground">crafts.by.sara@shop.net</p>
+            <p className="font-semibold">{sellerInfo.user_name}</p>
+            <p className="text-muted-foreground">{sellerInfo.user_email}</p>
           </div>
         </div>
 
         {/* Location, Contact, Status */}
         <div className="flex flex-col gap-3">
-          <p>Location: Los Angeles, CA</p>
-          <p>Contact: sara.chen_contact</p>
+          <p>
+            Location:{" "}
+            {sellerInfo.user_location
+              ? sellerInfo.user_location
+              : "Not Specified"}
+          </p>
+          <p>Contact: {sellerInfo.user_email}</p>
           <p>
             Status:{" "}
             <Badge
               variant="outline"
               className="rounded-full border-amber-600 text-amber-600"
             >
-              on sale
+              {product.status === "pending" && "On Sale"}
             </Badge>
           </p>
         </div>
@@ -214,7 +233,7 @@ function ProductsTable() {
 
         <TableBody>
           {[...Array(3)].map((_, i) => (
-            <TableRow className="*:text-center">
+            <TableRow className="*:text-center" key={i}>
               <TableCell>{i + 1}</TableCell>
 
               <TableCell className="flex justify-center">

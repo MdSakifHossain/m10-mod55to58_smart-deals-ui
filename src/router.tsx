@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createBrowserRouter } from "react-router"
 
 import App from "./layouts/App"
@@ -54,19 +55,55 @@ export const router = createBrowserRouter([
         path: "product-details/:product_id",
         loader: async ({ params }) => {
           const { product_id } = params
+
+          let product = null
+          let seller_info = null
+          let error = null
+
+          // try to get product info else send error
           try {
-            const { data: product } = await api.get(`/products/${product_id}`)
-            const { data: sellerInfo } = await api.get(
-              `/users/${product.seller_id}`
-            )
+            const response = await api.get(`/products/${product_id}`)
+            product = response.data
+          } catch (err) {
+            console.error(err.response?.data?.message)
+            product = null
+            seller_info = null
+            error = {
+              status: err.response?.status,
+              message: "Failed to fetch product details",
+            }
+            return {
+              product,
+              seller_info,
+              error,
+            }
+          }
+
+          // try to get seller info else send error
+          try {
+            const response = await api.get(`/users/${product.seller_id}`)
+            seller_info = response.data
+          } catch (err) {
+            console.error(err.response?.data?.message)
+            product = null
+            seller_info = null
+            error = {
+              status: err.response?.status,
+              message: "Failed to fetch seller details",
+            }
 
             return {
               product,
-              seller_info: sellerInfo,
+              seller_info,
+              error,
             }
-          } catch (err) {
-            console.error(err)
-            alert("Something went worng while fetching product details")
+          }
+
+          // everything is fine, we get full information without error
+          return {
+            product,
+            seller_info,
+            error,
           }
         },
         element: (

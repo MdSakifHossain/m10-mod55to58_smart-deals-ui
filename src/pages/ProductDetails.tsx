@@ -35,9 +35,34 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel } from "@/components/ui/field"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty"
 
 export default function ProductDetails() {
-  const { product, seller_info } = useLoaderData()
+  const { product, seller_info, error } = useLoaderData()
+
+  if (error) {
+    return (
+      <div className="flex h-[80svh] items-center justify-center">
+        <Empty className="h-full">
+          <EmptyHeader>
+            <EmptyTitle>{error.status} - Not Found</EmptyTitle>
+            <EmptyDescription>{error.message}</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <EmptyDescription>
+              Need help? <a href="#">Go Home</a>
+            </EmptyDescription>
+          </EmptyContent>
+        </Empty>
+      </div>
+    )
+  }
 
   return (
     <PageStructure className="grid grid-cols-1 gap-20">

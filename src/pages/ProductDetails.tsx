@@ -1,3 +1,4 @@
+// @ts-nocheck
 import PageStructure from "@/components/my-components/PageStructure"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {

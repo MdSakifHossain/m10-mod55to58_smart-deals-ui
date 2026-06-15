@@ -11,14 +11,16 @@ import {
 import { cn } from "@/lib/utils"
 import { Link } from "react-router"
 
-const ProductCard = ({ badge }) => {
+const ProductCard = ({ badge, product }) => {
   return (
     <Card className="relative mx-auto w-full max-w-sm pt-0 shadow-md">
-      <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
+      <div className="absolute inset-0 z-30 aspect-video bg-black/15" />
       <img
-        src="https://avatar.vercel.sh/shadcn1"
-        alt="Event cover"
-        className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40"
+        src={
+          product?.image ? product?.image : "https://avatar.vercel.sh/shadcn1"
+        }
+        alt="Product Image"
+        className="relative z-20 aspect-video w-full object-cover dark:brightness-80"
       />
       <CardHeader className="grid gap-2.5">
         <CardAction>
@@ -27,18 +29,18 @@ const ProductCard = ({ badge }) => {
               variant="outline"
               className="rounded-full border-primary text-primary"
             >
-              Featured
+              {product?.condition}
             </Badge>
           )}
         </CardAction>
-        <CardTitle>Design systems meetup</CardTitle>
-        <CardDescription className="text-sm font-medium dark:text-primary">
-          $55.99 - $75
+        <CardTitle>{product?.title}</CardTitle>
+        <CardDescription className="text-base font-medium dark:text-primary">
+          ${product?.price_min}
         </CardDescription>
       </CardHeader>
-      <CardFooter className="border-0">
+      <CardFooter className="mt-auto border-0">
         <Link
-          to="/product-details"
+          to={`/product-details/${product?._id}`}
           className={cn(
             buttonVariants({ variant: "outline" }),
             "w-full border-primary text-primary"

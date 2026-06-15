@@ -63,7 +63,7 @@ export default function AllProducts() {
       {products.length > 0 && (
         <div className="grid w-full max-w-6xl grid-cols-3 gap-6">
           {products.map((product) => (
-            <ProductCard badge={true} key={product._id} />
+            <ProductCard badge={true} key={product._id} product={product} />
           ))}
         </div>
       )}

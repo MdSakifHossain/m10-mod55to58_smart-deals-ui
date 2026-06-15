@@ -40,7 +40,7 @@ function ProductsTable() {
 
         <TableBody>
           {[...Array(12)].map((_, i) => (
-            <TableRow className="*:text-center">
+            <TableRow className="*:text-center" key={i}>
               <TableCell>{i + 1}</TableCell>
 
               <TableCell className="flex gap-3">

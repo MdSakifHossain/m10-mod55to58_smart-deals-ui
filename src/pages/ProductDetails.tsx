@@ -38,7 +38,6 @@ import { Field, FieldLabel } from "@/components/ui/field"
 
 export default function ProductDetails() {
   const { product, seller_info } = useLoaderData()
-  console.log(seller_info, product)
 
   return (
     <PageStructure className="grid grid-cols-1 gap-20">

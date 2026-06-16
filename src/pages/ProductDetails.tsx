@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/table"
 import {
   AlertDialog,
-  AlertDialogAction,
+  // AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
@@ -43,6 +43,9 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { useState } from "react"
+import { api } from "@/lib/api"
+import { useAuth } from "@/contexts/AuthProvider"
 
 export default function ProductDetails() {
   const { product, seller_info, error } = useLoaderData()
@@ -85,7 +88,7 @@ export default function ProductDetails() {
           <ProductIdAndPostedOnCard product={product} />
           <SellerInfoCard sellerInfo={seller_info} product={product} />
 
-          <BiddingDialogue>
+          <BiddingDialogue product={product}>
             <Button size="lg" className="text-base font-semibold">
               I want Buy This Product
             </Button>
@@ -315,75 +318,88 @@ function ProductsTable() {
   )
 }
 
-function BiddingDialogue({ children }) {
+function BiddingDialogue({ product, children }) {
+  const [bidPrice, setBidPrice] = useState(null)
+  const [dialogueOpen, setDialogueOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const { user } = useAuth()
+  const minValue = product.price_min
+
+  const handleChange = (e) => setBidPrice(parseInt(e.target.value, 10))
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // logic
+    if (bidPrice < minValue) {
+      return alert(`Bidding Price cant be less than ${minValue}`)
+    }
+
+    // go for api call
+    try {
+      setIsSubmitting(true)
+
+      const newBid = {
+        buyer_id: user.dbUser._id,
+        product_id: product._id,
+        bid_price: bidPrice,
+      }
+
+      await api.post("/bids", newBid)
+      setDialogueOpen(false)
+    } catch (err) {
+      console.error(err)
+      alert(err.message || "Something went wrong while placing Bid")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <AlertDialog>
+    <AlertDialog open={dialogueOpen} onOpenChange={setDialogueOpen}>
       <AlertDialogTrigger render={children} />
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Give Seller Your Offered Price</AlertDialogTitle>
         </AlertDialogHeader>
-        <Fooorm />
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Submit Bid</AlertDialogAction>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
+          <FieldWithTilte
+            id="bidding_price"
+            label={`Place your Price (Minimum ${minValue})`}
+          >
+            <Input
+              id="bidding_price"
+              placeholder={`Minimum ${minValue}`}
+              type="number"
+              className="px-5 py-6"
+              required
+              name="bidding_price"
+              onChange={handleChange}
+            />
+          </FieldWithTilte>
+
+          <Input
+            type="submit"
+            className={buttonVariants({ variant: "default" })}
+            disabled={(bidPrice < minValue ? true : false) || isSubmitting}
+          />
+        </form>
+        <AlertDialogFooter className="-mt-4">
+          <AlertDialogCancel className="w-full" disabled={isSubmitting}>
+            Cancel
+          </AlertDialogCancel>
+          {/* <AlertDialogAction>Submit Bid</AlertDialogAction> */}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   )
 }
 
-function Fooorm() {
-  return (
-    <form className="grid grid-cols-1 gap-8">
-      {/* Buyer Name && Email */}
-      <TwoColGrid>
-        <FieldWithTilte id="buyer_name" label="Buyer Name">
-          <Input id="buyer_name" type="text" placeholder="Your name" required />
-        </FieldWithTilte>
-
-        <FieldWithTilte id="buyer_email" label="Buyer Email">
-          <Input
-            id="buyer_email"
-            type="email"
-            placeholder="Your  Email"
-            required
-          />
-        </FieldWithTilte>
-      </TwoColGrid>
-
-      {/* Image URL */}
-      <FieldWithTilte id="buyer_image_url" label="Buyer Image URL">
-        <Input
-          id="buyer_image_url"
-          placeholder="https://..."
-          type="url"
-          required
-        />
-      </FieldWithTilte>
-
-      {/* Bidding Price */}
-      <FieldWithTilte id="bidding_price" label="Place your Price ($)">
-        <Input id="bidding_price" placeholder="499.99" type="number" required />
-      </FieldWithTilte>
-
-      {/* Location */}
-      <FieldWithTilte id="contact_info" label="Contact Info">
-        <Input
-          id="contact_info"
-          placeholder="+88-01x-xxxx-xxxx"
-          type="tel"
-          required
-        />
-      </FieldWithTilte>
-    </form>
-  )
-}
-
 // Helper
-function TwoColGrid({ children }) {
-  return <Field className="grid grid-cols-2 gap-5">{children}</Field>
-}
+// function TwoColGrid({ children }) {
+//   return <Field className="grid grid-cols-2 gap-5">{children}</Field>
+// }
 
 // Helper
 function FieldWithTilte({ id, label = "Label is REQUIRED", children }) {

@@ -248,7 +248,6 @@ function BidsSection({ product, bidsTrigger }) {
       try {
         const { data: apiRes } = await api.get(`/products/${product._id}/bids`)
         setBids(apiRes)
-        console.log(apiRes)
       } catch (err) {
         console.error(err)
         alert("Something Went Wrong while getting All Bids")

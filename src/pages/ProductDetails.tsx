@@ -50,6 +50,9 @@ import { useAuth } from "@/contexts/AuthProvider"
 export default function ProductDetails() {
   const { product, seller_info, error } = useLoaderData()
   const [bidsTrigger, setBidsTrigger] = useState(0)
+  const { user } = useAuth()
+  console.log(user)
+  console.log(product)
 
   if (error) {
     return (
@@ -89,11 +92,13 @@ export default function ProductDetails() {
           <ProductIdAndPostedOnCard product={product} />
           <SellerInfoCard sellerInfo={seller_info} product={product} />
 
-          <BiddingDialogue product={product} setBidsTrigger={setBidsTrigger}>
-            <Button size="lg" className="text-base font-semibold">
-              I want Buy This Product
-            </Button>
-          </BiddingDialogue>
+          {user.dbUser._id !== product.seller_id && (
+            <BiddingDialogue product={product} setBidsTrigger={setBidsTrigger}>
+              <Button size="lg" className="text-base font-semibold">
+                I want Buy This Product
+              </Button>
+            </BiddingDialogue>
+          )}
         </RightSide>
       </div>
 

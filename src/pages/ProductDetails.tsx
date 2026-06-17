@@ -51,8 +51,6 @@ export default function ProductDetails() {
   const { product, seller_info, error } = useLoaderData()
   const [bidsTrigger, setBidsTrigger] = useState(0)
   const { user } = useAuth()
-  console.log(user)
-  console.log(product)
 
   if (error) {
     return (
@@ -366,7 +364,7 @@ function BiddingDialogue({ product, setBidsTrigger, children }) {
       setBidsTrigger((prev) => prev + 1)
     } catch (err) {
       console.error(err)
-      alert(err.message || "Something went wrong while placing Bid")
+      alert("Something went wrong while placing Bid")
     } finally {
       setIsSubmitting(false)
     }

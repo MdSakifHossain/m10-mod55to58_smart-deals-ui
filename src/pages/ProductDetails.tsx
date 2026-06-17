@@ -43,12 +43,29 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { useAuth } from "@/contexts/AuthProvider"
 
 export default function ProductDetails() {
+  const [bids, setBids] = useState([])
+  const [bidsTrigger, setBidsTrigger] = useState(0)
   const { product, seller_info, error } = useLoaderData()
+
+  useEffect(() => {
+    const doTheThing = async () => {
+      try {
+        const { data: apiRes } = await api.get(`/products/${product._id}/bids`)
+        setBids(apiRes)
+        setBidsTrigger((prev) => prev + 1)
+        console.log(apiRes)
+      } catch (err) {
+        console.error(err)
+        alert("Something Went Wrong while getting All Bids")
+      }
+    }
+    doTheThing()
+  }, [product._id, bidsTrigger])
 
   if (error) {
     return (
@@ -97,11 +114,12 @@ export default function ProductDetails() {
       </div>
 
       <div className="grid grid-cols-1 gap-10">
-        <h2 className="text-5xl font-bold">
-          Bids For This Products: <span className="text-primary">1n</span>
+        <h2 className="text-5xl">
+          Bids For This Product:{" "}
+          <span className="text-primary">{bids.length}</span>
         </h2>
 
-        <ProductsTable />
+        {bids.length > 0 && <ProductsTable bids={bids} />}
       </div>
     </PageStructure>
   )
@@ -245,40 +263,23 @@ function SellerInfoCard({ sellerInfo, product }) {
   )
 }
 
-function ProductsTable() {
+function ProductsTable({ bids }) {
   return (
     <div className="w-full rounded-md border">
       <Table>
         <TableHeader>
           <TableRow className="*:text-center">
             <TableHead>SL No</TableHead>
-            <TableHead>Product</TableHead>
-            <TableHead>Bid Price</TableHead>
             <TableHead>Seller</TableHead>
+            <TableHead>Bid Price</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {[...Array(3)].map((_, i) => (
-            <TableRow className="*:text-center" key={i}>
+          {bids?.map((bid, i) => (
+            <TableRow className="*:text-center" key={bid._id}>
               <TableCell>{i + 1}</TableCell>
-
-              <TableCell className="flex justify-center">
-                <div className="flex gap-3">
-                  <img
-                    src="https://placehold.co/1280x720"
-                    alt="Product Image"
-                    className="w-16"
-                  />
-                  <div className="flex flex-col items-start">
-                    <p>Orange Juice</p>
-                    <p className="text-muted-foreground">$22.5</p>
-                  </div>
-                </div>
-              </TableCell>
-
-              <TableCell>$100</TableCell>
 
               <TableCell className="flex justify-center">
                 <div className="flex items-center justify-center gap-3">
@@ -298,15 +299,17 @@ function ProductsTable() {
                 </div>
               </TableCell>
 
+              <TableCell>${bid.bid_price}</TableCell>
+
               <TableCell>
                 <div className="grid grid-cols-2 gap-4">
                   <Button>
                     <IconCheck />
-                    Accept
+                    {/* Accept */}
                   </Button>
                   <Button variant="destructive">
                     <IconTrashFilled />
-                    Reject
+                    {/* Reject */}
                   </Button>
                 </div>
               </TableCell>

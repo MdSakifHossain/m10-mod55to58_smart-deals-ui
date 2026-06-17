@@ -48,24 +48,8 @@ import { api } from "@/lib/api"
 import { useAuth } from "@/contexts/AuthProvider"
 
 export default function ProductDetails() {
-  const [bids, setBids] = useState([])
-  const [bidsTrigger, setBidsTrigger] = useState(0)
   const { product, seller_info, error } = useLoaderData()
-
-  useEffect(() => {
-    const doTheThing = async () => {
-      try {
-        const { data: apiRes } = await api.get(`/products/${product._id}/bids`)
-        setBids(apiRes)
-        setBidsTrigger((prev) => prev + 1)
-        console.log(apiRes)
-      } catch (err) {
-        console.error(err)
-        alert("Something Went Wrong while getting All Bids")
-      }
-    }
-    doTheThing()
-  }, [product._id, bidsTrigger])
+  const [bidsTrigger, setBidsTrigger] = useState(0)
 
   if (error) {
     return (
@@ -105,7 +89,7 @@ export default function ProductDetails() {
           <ProductIdAndPostedOnCard product={product} />
           <SellerInfoCard sellerInfo={seller_info} product={product} />
 
-          <BiddingDialogue product={product}>
+          <BiddingDialogue product={product} setBidsTrigger={setBidsTrigger}>
             <Button size="lg" className="text-base font-semibold">
               I want Buy This Product
             </Button>
@@ -113,14 +97,7 @@ export default function ProductDetails() {
         </RightSide>
       </div>
 
-      <div className="grid grid-cols-1 gap-10">
-        <h2 className="text-5xl">
-          Bids For This Product:{" "}
-          <span className="text-primary">{bids.length}</span>
-        </h2>
-
-        {bids.length > 0 && <ProductsTable bids={bids} />}
-      </div>
+      <BidsSection product={product} bidsTrigger={bidsTrigger} />
     </PageStructure>
   )
 }
@@ -263,7 +240,36 @@ function SellerInfoCard({ sellerInfo, product }) {
   )
 }
 
-function ProductsTable({ bids }) {
+function BidsSection({ product, bidsTrigger }) {
+  const [bids, setBids] = useState([])
+
+  useEffect(() => {
+    const doTheThing = async () => {
+      try {
+        const { data: apiRes } = await api.get(`/products/${product._id}/bids`)
+        setBids(apiRes)
+        console.log(apiRes)
+      } catch (err) {
+        console.error(err)
+        alert("Something Went Wrong while getting All Bids")
+      }
+    }
+    doTheThing()
+  }, [product._id, bidsTrigger])
+
+  return (
+    <div className="grid grid-cols-1 gap-10">
+      <h2 className="text-5xl">
+        Bids For This Product:{" "}
+        <span className="text-primary">{bids.length}</span>
+      </h2>
+
+      {bids.length > 0 && <BidsTable bids={bids} />}
+    </div>
+  )
+}
+
+function BidsTable({ bids }) {
   return (
     <div className="w-full rounded-md border">
       <Table>
@@ -285,15 +291,17 @@ function ProductsTable({ bids }) {
                 <div className="flex items-center justify-center gap-3">
                   <Avatar>
                     <AvatarImage
-                      alt="Sara Chen"
-                      src="https://github.com/shadcn.png"
+                      alt={bid.buyer.user_name}
+                      src={bid.buyer.user_image}
                     />
-                    <AvatarFallback>SC</AvatarFallback>
+                    <AvatarFallback>
+                      {bid.buyer.user_name.slice(0, 2)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col items-start">
-                    <p>Sara Chen</p>
+                    <p>{bid.buyer.user_name}</p>
                     <p className="text-muted-foreground">
-                      crafts.by.sara@shop.net
+                      {bid.buyer.user_email}
                     </p>
                   </div>
                 </div>
@@ -321,7 +329,7 @@ function ProductsTable({ bids }) {
   )
 }
 
-function BiddingDialogue({ product, children }) {
+function BiddingDialogue({ product, setBidsTrigger, children }) {
   const [bidPrice, setBidPrice] = useState(null)
   const [dialogueOpen, setDialogueOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -351,6 +359,7 @@ function BiddingDialogue({ product, children }) {
 
       await api.post("/bids", newBid)
       setDialogueOpen(false)
+      setBidsTrigger((prev) => prev + 1)
     } catch (err) {
       console.error(err)
       alert(err.message || "Something went wrong while placing Bid")

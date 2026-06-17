@@ -1,6 +1,6 @@
+// @ts-nocheck
 import PageStructure from "@/components/my-components/PageStructure"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
   Table,
@@ -26,18 +26,38 @@ import {
   IconTrashFilled,
 } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
+import { api } from "@/lib/api"
+import { useAuth } from "@/contexts/AuthProvider"
 
 export default function MyProducts() {
+  const [myProds, setMyProds] = useState([])
+  const { user } = useAuth()
+
+  useEffect(() => {
+    const doTheThing = async () => {
+      try {
+        const url = `/my_products?user_id=${user.dbUser._id}`
+        const { data: prods } = await api.get(url)
+        setMyProds(prods)
+      } catch (err) {
+        console.error(err)
+        alert("Something Went wrong while getting all my Product")
+      }
+    }
+    doTheThing()
+  }, [user.dbUser._id])
+
   return (
     <PageStructure className="flex flex-col items-center gap-10 pb-28">
       <h2 className="text-5xl">My Products: 1n</h2>
 
-      <ProductsTable />
+      <ProductsTable products={myProds} />
     </PageStructure>
   )
 }
 
-function ProductsTable() {
+function ProductsTable({ products }) {
   return (
     <div className="w-full max-w-4xl rounded-md border bg-background">
       <Table>
@@ -54,27 +74,25 @@ function ProductsTable() {
         </TableHeader>
 
         <TableBody>
-          {[...Array(12)].map((_, i) => (
+          {products.map((product, i) => (
             <TableRow key={i} className="*:text-center">
               <TableCell>{i + 1}</TableCell>
               <TableCell>
-                <Avatar className="mx-auto">
-                  <AvatarImage
-                    alt="shadcn"
-                    src="https://github.com/shadcn.png"
-                  />
-                  <AvatarFallback>SH</AvatarFallback>
-                </Avatar>
+                <img
+                  className="max-w-24"
+                  src={product.image}
+                  alt={product.title.slice(0, 2)}
+                />
               </TableCell>
-              <TableCell>Orange Juice</TableCell>
-              <TableCell>Beverage</TableCell>
-              <TableCell>$100</TableCell>
+              <TableCell>{product.title}</TableCell>
+              <TableCell>{product.category}</TableCell>
+              <TableCell>${product.price_min}</TableCell>
               <TableCell>
                 <Badge
                   variant="outline"
                   className="rounded-full border-amber-600 text-amber-600"
                 >
-                  Pending
+                  {product.status}
                 </Badge>
               </TableCell>
               <TableCell>

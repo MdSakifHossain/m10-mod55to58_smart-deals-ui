@@ -113,11 +113,7 @@ export default function ProductDetails() {
               setBidsTrigger={setBidsTrigger}
               highestBiddingPrice={highestBiddingPrice}
             >
-              <Button
-                size="lg"
-                className="text-lg font-semibold"
-                className="py-6"
-              >
+              <Button size="lg" className="py-6 text-base font-semibold">
                 I want Buy This Product
               </Button>
             </BiddingDialogue>

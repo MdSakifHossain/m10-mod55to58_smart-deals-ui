@@ -2,7 +2,7 @@ import PageStructure from "@/components/my-components/PageStructure"
 import ProductCard from "@/components/my-components/ProductCard"
 import { api } from "@/lib/api"
 import { useEffect, useState } from "react"
-import { IconBuildingStore, IconRefresh } from "@tabler/icons-react"
+import { IconBuildingStore, IconPlus, IconRefresh } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import {
   Empty,
@@ -12,6 +12,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { Link } from "react-router"
 
 export default function AllProducts() {
   const [refreshTrigger, setRefreshTrigger] = useState(0)
@@ -47,13 +48,25 @@ export default function AllProducts() {
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <Button
-                variant="outline"
-                onClick={() => setRefreshTrigger((prev) => prev + 1)}
-              >
-                <IconRefresh stroke={2} />
-                Refresh
-              </Button>
+              <div className="flex gap-4">
+                <Link to={`/create-product`}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setRefreshTrigger((prev) => prev + 1)}
+                  >
+                    <IconPlus stroke={2} />
+                    Add Product
+                  </Button>
+                </Link>
+
+                <Button
+                  variant="outline"
+                  onClick={() => setRefreshTrigger((prev) => prev + 1)}
+                >
+                  <IconRefresh stroke={2} />
+                  Refresh
+                </Button>
+              </div>
             </EmptyContent>
           </Empty>
         </div>

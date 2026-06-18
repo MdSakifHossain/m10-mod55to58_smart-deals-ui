@@ -48,9 +48,26 @@ import { api } from "@/lib/api"
 import { useAuth } from "@/contexts/AuthProvider"
 
 export default function ProductDetails() {
-  const { product, seller_info, error } = useLoaderData()
+  const { product, seller_info, error } = useLoaderData() // coming from Loader
+
+  const [bids, setBids] = useState([])
   const [bidsTrigger, setBidsTrigger] = useState(0)
+
   const { user } = useAuth()
+  const highestBiddingPrice = bids[0]?.bid_price
+
+  useEffect(() => {
+    const doTheThing = async () => {
+      try {
+        const { data: apiRes } = await api.get(`/products/${product._id}/bids`)
+        setBids(apiRes)
+      } catch (err) {
+        console.error(err)
+        alert("Something Went Wrong while getting All Bids")
+      }
+    }
+    doTheThing()
+  }, [product._id, bidsTrigger])
 
   if (error) {
     return (
@@ -91,8 +108,16 @@ export default function ProductDetails() {
           <SellerInfoCard sellerInfo={seller_info} product={product} />
 
           {user.dbUser._id !== product.seller_id && (
-            <BiddingDialogue product={product} setBidsTrigger={setBidsTrigger}>
-              <Button size="lg" className="text-base font-semibold">
+            <BiddingDialogue
+              product={product}
+              setBidsTrigger={setBidsTrigger}
+              highestBiddingPrice={highestBiddingPrice}
+            >
+              <Button
+                size="lg"
+                className="text-lg font-semibold"
+                className="py-6"
+              >
                 I want Buy This Product
               </Button>
             </BiddingDialogue>
@@ -100,8 +125,170 @@ export default function ProductDetails() {
         </RightSide>
       </div>
 
-      <BidsSection product={product} bidsTrigger={bidsTrigger} />
+      <BidsSection bids={bids} product={product} bidsTrigger={bidsTrigger} />
     </PageStructure>
+  )
+}
+
+function BidsSection({ bids }) {
+  return (
+    <div className="grid grid-cols-1 gap-10">
+      <h2 className="text-5xl">
+        Bids For This Product:{" "}
+        <span className="text-primary">{bids.length}</span>
+      </h2>
+
+      {bids.length > 0 && <BidsTable bids={bids} />}
+    </div>
+  )
+}
+
+function BidsTable({ bids }) {
+  return (
+    <div className="w-full rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow className="*:text-center">
+            <TableHead>SL No</TableHead>
+            <TableHead className="text-left!">Seller</TableHead>
+            <TableHead>Bid Price ($)</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {bids?.map((bid, i) => (
+            <TableRow className="*:text-center" key={bid._id}>
+              <TableCell>{i + 1}</TableCell>
+
+              <TableCell className="flex justify-start">
+                <div className="flex items-center justify-center gap-3">
+                  <Avatar>
+                    <AvatarImage
+                      alt={bid.buyer.user_name}
+                      src={bid.buyer.user_image}
+                    />
+                    <AvatarFallback>
+                      {bid.buyer.user_name.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col items-start">
+                    <p>{bid.buyer.user_name}</p>
+                    <p className="text-muted-foreground">
+                      {bid.buyer.user_email}
+                    </p>
+                  </div>
+                </div>
+              </TableCell>
+
+              <TableCell>{bid.bid_price}</TableCell>
+
+              <TableCell>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button disabled>
+                    <IconCheck />
+                    {/* Accept */}
+                  </Button>
+                  <Button variant="destructive" disabled>
+                    <IconTrashFilled />
+                    {/* Reject */}
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
+function BiddingDialogue({
+  product,
+  setBidsTrigger,
+  highestBiddingPrice = 0,
+  children,
+}) {
+  const [currentBidPrice, setCurrentBidPrice] = useState(null) // initially null then number then null eventually
+  const [dialogueOpen, setDialogueOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const { user } = useAuth()
+
+  if (highestBiddingPrice <= 0) highestBiddingPrice = product.price_min
+
+  const handleChange = (e) => {
+    const value = parseInt(e.target.value, 10)
+    const finalValue = Math.max(0, value || 0)
+    setCurrentBidPrice(finalValue)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // go for api call
+    try {
+      setIsSubmitting(true)
+
+      const newBid = {
+        buyer_id: user.dbUser._id,
+        product_id: product._id,
+        bid_price: currentBidPrice,
+      }
+
+      await api.post("/bids", newBid)
+      setDialogueOpen(false)
+      setBidsTrigger((prev) => prev + 1)
+      setCurrentBidPrice(null)
+    } catch (err) {
+      console.error(err)
+      alert("Something went wrong while placing Bid")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <AlertDialog open={dialogueOpen} onOpenChange={setDialogueOpen}>
+      <AlertDialogTrigger render={children} />
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Give Seller Your Offered Price</AlertDialogTitle>
+        </AlertDialogHeader>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
+          <FieldWithTilte
+            id="bidding_price"
+            label={`Place your Price (Highest Bid: ${highestBiddingPrice})`}
+          >
+            <Input
+              id="bidding_price"
+              placeholder={`More than ${highestBiddingPrice}`}
+              type="number"
+              className="px-5 py-6"
+              required
+              name="bidding_price"
+              min={highestBiddingPrice}
+              onChange={handleChange}
+            />
+          </FieldWithTilte>
+
+          <Input
+            type="submit"
+            className={buttonVariants({ variant: "default" })}
+            disabled={
+              (!(highestBiddingPrice < currentBidPrice) ? true : false) ||
+              isSubmitting
+            }
+          />
+        </form>
+        <AlertDialogFooter className="-mt-4">
+          <AlertDialogCancel className="w-full" disabled={isSubmitting}>
+            Cancel
+          </AlertDialogCancel>
+          {/* <AlertDialogAction>Submit Bid</AlertDialogAction> */}
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
 
@@ -240,173 +427,6 @@ function SellerInfoCard({ sellerInfo, product }) {
         </div>
       </CardContent>
     </Card>
-  )
-}
-
-function BidsSection({ product, bidsTrigger }) {
-  const [bids, setBids] = useState([])
-
-  useEffect(() => {
-    const doTheThing = async () => {
-      try {
-        const { data: apiRes } = await api.get(`/products/${product._id}/bids`)
-        setBids(apiRes)
-      } catch (err) {
-        console.error(err)
-        alert("Something Went Wrong while getting All Bids")
-      }
-    }
-    doTheThing()
-  }, [product._id, bidsTrigger])
-
-  return (
-    <div className="grid grid-cols-1 gap-10">
-      <h2 className="text-5xl">
-        Bids For This Product:{" "}
-        <span className="text-primary">{bids.length}</span>
-      </h2>
-
-      {bids.length > 0 && <BidsTable bids={bids} />}
-    </div>
-  )
-}
-
-function BidsTable({ bids }) {
-  return (
-    <div className="w-full rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow className="*:text-center">
-            <TableHead>SL No</TableHead>
-            <TableHead>Seller</TableHead>
-            <TableHead>Bid Price</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {bids?.map((bid, i) => (
-            <TableRow className="*:text-center" key={bid._id}>
-              <TableCell>{i + 1}</TableCell>
-
-              <TableCell className="flex justify-center">
-                <div className="flex items-center justify-center gap-3">
-                  <Avatar>
-                    <AvatarImage
-                      alt={bid.buyer.user_name}
-                      src={bid.buyer.user_image}
-                    />
-                    <AvatarFallback>
-                      {bid.buyer.user_name.slice(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col items-start">
-                    <p>{bid.buyer.user_name}</p>
-                    <p className="text-muted-foreground">
-                      {bid.buyer.user_email}
-                    </p>
-                  </div>
-                </div>
-              </TableCell>
-
-              <TableCell>${bid.bid_price}</TableCell>
-
-              <TableCell>
-                <div className="grid grid-cols-2 gap-4">
-                  <Button>
-                    <IconCheck />
-                    {/* Accept */}
-                  </Button>
-                  <Button variant="destructive">
-                    <IconTrashFilled />
-                    {/* Reject */}
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  )
-}
-
-function BiddingDialogue({ product, setBidsTrigger, children }) {
-  const [bidPrice, setBidPrice] = useState(null)
-  const [dialogueOpen, setDialogueOpen] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const { user } = useAuth()
-  const minValue = product.price_min
-
-  const handleChange = (e) => setBidPrice(parseInt(e.target.value, 10))
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    // logic
-    if (bidPrice < minValue) {
-      return alert(`Bidding Price cant be less than ${minValue}`)
-    }
-
-    // go for api call
-    try {
-      setIsSubmitting(true)
-
-      const newBid = {
-        buyer_id: user.dbUser._id,
-        product_id: product._id,
-        bid_price: bidPrice,
-      }
-
-      await api.post("/bids", newBid)
-      setDialogueOpen(false)
-      setBidsTrigger((prev) => prev + 1)
-    } catch (err) {
-      console.error(err)
-      alert("Something went wrong while placing Bid")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  return (
-    <AlertDialog open={dialogueOpen} onOpenChange={setDialogueOpen}>
-      <AlertDialogTrigger render={children} />
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Give Seller Your Offered Price</AlertDialogTitle>
-        </AlertDialogHeader>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
-          <FieldWithTilte
-            id="bidding_price"
-            label={`Place your Price (Minimum ${minValue})`}
-          >
-            <Input
-              id="bidding_price"
-              placeholder={`Minimum ${minValue}`}
-              type="number"
-              className="px-5 py-6"
-              required
-              name="bidding_price"
-              onChange={handleChange}
-            />
-          </FieldWithTilte>
-
-          <Input
-            type="submit"
-            className={buttonVariants({ variant: "default" })}
-            disabled={(bidPrice < minValue ? true : false) || isSubmitting}
-          />
-        </form>
-        <AlertDialogFooter className="-mt-4">
-          <AlertDialogCancel className="w-full" disabled={isSubmitting}>
-            Cancel
-          </AlertDialogCancel>
-          {/* <AlertDialogAction>Submit Bid</AlertDialogAction> */}
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   )
 }
 

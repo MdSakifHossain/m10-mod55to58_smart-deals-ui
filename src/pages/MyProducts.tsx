@@ -111,7 +111,7 @@ function DropdownMenuDestructive({ product }) {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button size="icon-sm">
+          <Button size="icon-lg" variant={"ghost"}>
             <IconDotsVertical />
           </Button>
         }

@@ -33,6 +33,7 @@ import { useNavigate } from "react-router"
 
 export default function MyProducts() {
   const [myProds, setMyProds] = useState([])
+  const [refetchTrigger, setRefetchTrigger] = useState(0)
   const { user } = useAuth()
 
   useEffect(() => {
@@ -47,18 +48,23 @@ export default function MyProducts() {
       }
     }
     doTheThing()
-  }, [user.dbUser._id])
+  }, [user.dbUser._id, refetchTrigger])
 
   return (
     <PageStructure className="flex flex-col items-center gap-10 pb-28">
-      <h2 className="text-5xl">My Products: 1n</h2>
+      <h2 className="text-5xl">My Products: {myProds.length}</h2>
 
-      <ProductsTable products={myProds} />
+      {myProds.length !== 0 && (
+        <ProductsTable
+          products={myProds}
+          setRefetchTrigger={setRefetchTrigger}
+        />
+      )}
     </PageStructure>
   )
 }
 
-function ProductsTable({ products }) {
+function ProductsTable({ products, setRefetchTrigger }) {
   return (
     <div className="w-full max-w-4xl rounded-md border bg-background">
       <Table>
@@ -97,7 +103,10 @@ function ProductsTable({ products }) {
                 </Badge>
               </TableCell>
               <TableCell>
-                <DropdownMenuDestructive product={product} />
+                <DropdownMenuDestructive
+                  product={product}
+                  setRefetchTrigger={setRefetchTrigger}
+                />
               </TableCell>
             </TableRow>
           ))}
@@ -107,11 +116,27 @@ function ProductsTable({ products }) {
   )
 }
 
-function DropdownMenuDestructive({ product }) {
+function DropdownMenuDestructive({ product, setRefetchTrigger }) {
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   const handleViewClick = () => {
     navigate(`/product-details/${product._id}`)
+  }
+
+  const handleDeleteClick = async (productId) => {
+    try {
+      const { data: apiRes } = await api.delete(`/products/${productId}`, {
+        data: {
+          user_id: user.dbUser._id,
+        },
+      })
+      console.log(apiRes)
+      // setProducts((prev) => prev.filter((product) => product._id !== productId))
+      setRefetchTrigger((prev) => prev + 1)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -138,13 +163,7 @@ function DropdownMenuDestructive({ product }) {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem
-            disabled
-            variant="destructive"
-            onClick={() => {
-              console.log(`Delete ${product.title}`)
-            }}
-          >
+          <DropdownMenuItem onClick={() => handleDeleteClick(product._id)}>
             <IconTrashFilled />
             Delete
           </DropdownMenuItem>

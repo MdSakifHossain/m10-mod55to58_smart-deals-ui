@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {
   IconDotsVertical,
+  IconEye,
   IconPencil,
   IconTrashFilled,
 } from "@tabler/icons-react"
@@ -28,6 +29,7 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { useAuth } from "@/contexts/AuthProvider"
+import { useNavigate } from "react-router"
 
 export default function MyProducts() {
   const [myProds, setMyProds] = useState([])
@@ -106,6 +108,12 @@ function ProductsTable({ products }) {
 }
 
 function DropdownMenuDestructive({ product }) {
+  const navigate = useNavigate()
+
+  const handleViewClick = () => {
+    navigate(`/product-details/${product._id}`)
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -117,6 +125,10 @@ function DropdownMenuDestructive({ product }) {
       />
       <DropdownMenuContent>
         <DropdownMenuGroup>
+          <DropdownMenuItem onClick={handleViewClick}>
+            <IconEye />
+            View
+          </DropdownMenuItem>
           <DropdownMenuItem disabled>
             <IconPencil />
             Edit

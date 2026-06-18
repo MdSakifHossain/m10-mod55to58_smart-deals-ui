@@ -24,11 +24,15 @@ export default function RecentProducts({
       <h2 className="text-5xl">Recent Products</h2>
 
       {/* 3x2 grid */}
-      <div className="grid w-full max-w-6xl grid-cols-3 gap-6">
-        {products.map((product) => (
-          <ProductCard badge={false} key={product._id} product={product} />
-        ))}
-      </div>
+      {products.length !== 0 ? (
+        <div className="grid w-full max-w-6xl grid-cols-3 gap-6">
+          {products.map((product) => (
+            <ProductCard badge={false} key={product._id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-muted-foreground">No Products!</p>
+      )}
 
       <Link
         to="/all-products"

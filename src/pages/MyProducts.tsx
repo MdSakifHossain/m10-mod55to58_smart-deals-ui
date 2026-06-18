@@ -69,7 +69,7 @@ function ProductsTable({ products }) {
             <TableHead>Category</TableHead>
             <TableHead>Price</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -85,7 +85,7 @@ function ProductsTable({ products }) {
                 />
               </TableCell>
               <TableCell>{product.title}</TableCell>
-              <TableCell>{product.category}</TableCell>
+              <TableCell className="capitalize">{product.category}</TableCell>
               <TableCell>${product.price_min}</TableCell>
               <TableCell>
                 <Badge
@@ -96,7 +96,7 @@ function ProductsTable({ products }) {
                 </Badge>
               </TableCell>
               <TableCell>
-                <DropdownMenuDestructive />
+                <DropdownMenuDestructive product={product} />
               </TableCell>
             </TableRow>
           ))}
@@ -106,30 +106,34 @@ function ProductsTable({ products }) {
   )
 }
 
-function DropdownMenuDestructive() {
+function DropdownMenuDestructive({ product }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button>
+          <Button size="icon-sm">
             <IconDotsVertical />
           </Button>
         }
       />
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem disabled>
             <IconPencil />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <IconEye />
-            Mark as Read
-          </DropdownMenuItem>
         </DropdownMenuGroup>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuGroup>
-          <DropdownMenuItem variant="destructive">
+          <DropdownMenuItem
+            disabled
+            variant="destructive"
+            onClick={() => {
+              console.log(`Delete ${product.title}`)
+            }}
+          >
             <IconTrashFilled />
             Delete
           </DropdownMenuItem>

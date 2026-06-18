@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {
   IconDotsVertical,
-  IconEye,
   IconPencil,
   IconTrashFilled,
 } from "@tabler/icons-react"

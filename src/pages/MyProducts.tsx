@@ -91,7 +91,11 @@ function ProductsTable({ products, setRefetchTrigger }) {
                   alt={product.title.slice(0, 2)}
                 />
               </TableCell>
-              <TableCell>{product.title}</TableCell>
+              <TableCell>
+                {product.title.length > 30
+                  ? `${product.title.slice(0, 30)}...`
+                  : "that"}
+              </TableCell>
               <TableCell className="capitalize">{product.category}</TableCell>
               <TableCell>${product.price_min}</TableCell>
               <TableCell>

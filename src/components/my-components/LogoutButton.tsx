@@ -14,7 +14,7 @@ const LogoutButton = () => {
   }
 
   return (
-    <Button variant="destructive" onClick={() => handleButtonPress()}>
+    <Button variant="outline" onClick={() => handleButtonPress()}>
       <IconLogout stroke={2} />
       Log Out
     </Button>

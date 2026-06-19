@@ -53,6 +53,7 @@ export default function MyBids() {
 }
 
 function ProductsTable({ bids }) {
+  console.log(bids)
   return (
     <div className="w-full max-w-7xl rounded-md border bg-background">
       <Table>
@@ -115,7 +116,7 @@ function ProductsTable({ bids }) {
                   variant="outline"
                   className="rounded-full border-amber-600 text-amber-600"
                 >
-                  Pending
+                  {bid.status}
                 </Badge>
               </TableCell>
 

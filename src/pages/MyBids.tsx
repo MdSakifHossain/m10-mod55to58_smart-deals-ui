@@ -41,14 +41,18 @@ export default function MyBids() {
     <PageStructure className="flex flex-col items-center gap-10 pb-28">
       <h2 className="text-5xl">My Bids: {myBids.length}</h2>
 
-      {myBids.length > 0 && <ProductsTable bids={myBids} />}
+      {myBids.length > 0 ? (
+        <ProductsTable bids={myBids} />
+      ) : (
+        <div className="flex min-h-[60svh] flex-col items-center justify-center">
+          <p className="text-2xl text-muted-foreground">No Bids</p>
+        </div>
+      )}
     </PageStructure>
   )
 }
 
 function ProductsTable({ bids }) {
-  console.log(bids)
-
   return (
     <div className="w-full max-w-7xl rounded-md border bg-background">
       <Table>

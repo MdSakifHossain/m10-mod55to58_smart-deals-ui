@@ -23,6 +23,7 @@ import {
   IconDotsVertical,
   IconEye,
   IconPencil,
+  IconShare,
   IconTrashFilled,
 } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
@@ -94,7 +95,7 @@ function ProductsTable({ products, setRefetchTrigger }) {
               <TableCell>
                 {product.title.length > 30
                   ? `${product.title.slice(0, 30)}...`
-                  : "that"}
+                  : product.title}
               </TableCell>
               <TableCell className="capitalize">{product.category}</TableCell>
               <TableCell>${product.price_min}</TableCell>
@@ -128,6 +129,16 @@ function DropdownMenuDestructive({ product, setRefetchTrigger }) {
     navigate(`/product-details/${product._id}`)
   }
 
+  const handleShareClick = async () => {
+    const final = `${window.location.origin}/product-details/${product._id}`
+    try {
+      await navigator.clipboard.writeText(final)
+      alert("Product link copied to Clipboard")
+    } catch (err) {
+      console.error("Failed to copy: ", err)
+    }
+  }
+
   const handleDeleteClick = async (productId) => {
     try {
       const { data: apiRes } = await api.delete(`/products/${productId}`, {
@@ -158,16 +169,23 @@ function DropdownMenuDestructive({ product, setRefetchTrigger }) {
             <IconEye />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            <IconPencil />
-            Edit
+          <DropdownMenuItem onClick={handleShareClick}>
+            <IconShare />
+            Share
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleDeleteClick(product._id)}>
+          <DropdownMenuItem disabled>
+            <IconPencil />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => handleDeleteClick(product._id)}
+          >
             <IconTrashFilled />
             Delete
           </DropdownMenuItem>

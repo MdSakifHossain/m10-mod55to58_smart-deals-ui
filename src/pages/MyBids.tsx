@@ -93,8 +93,8 @@ function ProductsTable({ bids, setRefetchTrigger }) {
                 />
                 <div className="flex flex-col items-start">
                   <p>
-                    {bid.product.title.toString().length < 30
-                      ? bid.product.title.toString().slice(0, 30)
+                    {bid.product.title.toString().length > 30
+                      ? `${bid.product.title.toString().slice(0, 30)}..`
                       : bid.product.title}
                   </p>
                   <p className="text-muted-foreground">

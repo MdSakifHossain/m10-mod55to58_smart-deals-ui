@@ -11,14 +11,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { IconTrashFilled } from "@tabler/icons-react"
+import { IconTrash, IconTrashFilled } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { useAuth } from "@/contexts/AuthProvider"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function MyBids() {
   const [myBids, setMyBids] = useState([])
+  const [refetchTrigger, setRefetchTrigger] = useState(0)
   const { user } = useAuth()
 
   useEffect(() => {
@@ -35,14 +48,14 @@ export default function MyBids() {
       }
     }
     doTheThing()
-  }, [user])
+  }, [user, refetchTrigger])
 
   return (
     <PageStructure className="flex flex-col items-center gap-10 pb-28">
       <h2 className="text-5xl">My Bids: {myBids.length}</h2>
 
       {myBids.length > 0 ? (
-        <ProductsTable bids={myBids} />
+        <ProductsTable bids={myBids} setRefetchTrigger={setRefetchTrigger} />
       ) : (
         <div className="flex min-h-[60svh] flex-col items-center justify-center">
           <p className="text-2xl text-muted-foreground">No Bids</p>
@@ -52,8 +65,7 @@ export default function MyBids() {
   )
 }
 
-function ProductsTable({ bids }) {
-  console.log(bids)
+function ProductsTable({ bids, setRefetchTrigger }) {
   return (
     <div className="w-full max-w-7xl rounded-md border bg-background">
       <Table>
@@ -121,15 +133,75 @@ function ProductsTable({ bids }) {
               </TableCell>
 
               <TableCell>
-                <Button variant="destructive" disabled>
-                  <IconTrashFilled />
-                  Delete
-                </Button>
+                <DeleteBidDialog
+                  setRefetchTrigger={setRefetchTrigger}
+                  bidId={bid._id}
+                >
+                  <Button variant="destructive">
+                    <IconTrashFilled />
+                    Delete
+                  </Button>
+                </DeleteBidDialog>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
+  )
+}
+
+function DeleteBidDialog({ bidId, setRefetchTrigger, children }) {
+  const [dialogueOpen, setDialogueOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
+  const { user } = useAuth()
+
+  const closeDialogue = () => setDialogueOpen(false)
+
+  const handleDelete = async () => {
+    try {
+      setSubmitting(true)
+      await api.delete(`/bids/${bidId}`, {
+        data: {
+          user_id: user?.dbUser?._id,
+        },
+      })
+      setRefetchTrigger((prev) => prev + 1)
+    } catch (error) {
+      console.error(error)
+      console.log(`Error happened`)
+      alert("Something went wrong while Deleting BID")
+    } finally {
+      setSubmitting(false)
+      closeDialogue()
+    }
+  }
+
+  return (
+    <AlertDialog open={dialogueOpen} onOpenChange={setDialogueOpen}>
+      <AlertDialogTrigger render={children} />
+      <AlertDialogContent size="sm">
+        <AlertDialogHeader>
+          <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+            <IconTrash />
+          </AlertDialogMedia>
+          <AlertDialogTitle>Delete Bid?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will permanently delete this Bid.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={submitting}
+          >
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }

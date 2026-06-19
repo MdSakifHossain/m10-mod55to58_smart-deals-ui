@@ -1,3 +1,4 @@
+// @ts-nocheck
 import PageStructure from "@/components/my-components/PageStructure"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -12,18 +13,42 @@ import {
 } from "@/components/ui/table"
 import { IconTrashFilled } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
+import { api } from "@/lib/api"
+import { useAuth } from "@/contexts/AuthProvider"
 
 export default function MyBids() {
+  const [myBids, setMyBids] = useState([])
+  const { user } = useAuth()
+
+  useEffect(() => {
+    const userID = user?.dbUser?._id
+    const doTheThing = async () => {
+      try {
+        if (userID) {
+          const { data: apiRes } = await api.get(`/my_bids?user_id=${userID}`)
+          setMyBids(apiRes)
+        }
+      } catch (err) {
+        console.error(err)
+        alert("something went wrong getting MY BIDS")
+      }
+    }
+    doTheThing()
+  }, [user])
+
   return (
     <PageStructure className="flex flex-col items-center gap-10 pb-28">
-      <h2 className="text-5xl">My Bids: 1n</h2>
+      <h2 className="text-5xl">My Bids: {myBids.length}</h2>
 
-      <ProductsTable />
+      {myBids.length > 0 && <ProductsTable bids={myBids} />}
     </PageStructure>
   )
 }
 
-function ProductsTable() {
+function ProductsTable({ bids }) {
+  console.log(bids)
+
   return (
     <div className="w-full max-w-7xl rounded-md border bg-background">
       <Table>
@@ -39,36 +64,44 @@ function ProductsTable() {
         </TableHeader>
 
         <TableBody>
-          {[...Array(12)].map((_, i) => (
+          {bids?.map((bid, i) => (
             <TableRow className="*:text-center" key={i}>
               <TableCell>{i + 1}</TableCell>
 
               <TableCell className="flex gap-3">
                 <img
-                  src="https://placehold.co/1280x720"
-                  alt="Product Image"
-                  className="w-16"
+                  src={bid.product.image || "https://placehold.co/1280x720"}
+                  alt={bid.product.title || "Product Image"}
+                  className="w-12"
                 />
                 <div className="flex flex-col items-start">
-                  <p>Orange Juice</p>
-                  <p className="text-muted-foreground">$22.5</p>
+                  <p>
+                    {bid.product.title.toString().length < 30
+                      ? bid.product.title.toString().slice(0, 30)
+                      : bid.product.title}
+                  </p>
+                  <p className="text-muted-foreground">
+                    ${bid.product.price_min}
+                  </p>
                 </div>
               </TableCell>
 
-              <TableCell>$100</TableCell>
+              <TableCell>${bid.bid_price}</TableCell>
 
               <TableCell className="flex items-center justify-center gap-3">
                 <Avatar>
                   <AvatarImage
-                    alt="Sara Chen"
-                    src="https://github.com/shadcn.png"
+                    alt={bid.product.seller.user_name}
+                    src={bid.product.seller.user_image}
                   />
-                  <AvatarFallback>SC</AvatarFallback>
+                  <AvatarFallback>
+                    {bid.product.seller.user_name.toString().slice(0, 2)}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start">
-                  <p>Sara Chen</p>
+                  <p>{bid.product.seller.user_name}</p>
                   <p className="text-muted-foreground">
-                    crafts.by.sara@shop.net
+                    {bid.product.seller.user_email}
                   </p>
                 </div>
               </TableCell>
@@ -83,7 +116,7 @@ function ProductsTable() {
               </TableCell>
 
               <TableCell>
-                <Button variant="destructive">
+                <Button variant="destructive" disabled>
                   <IconTrashFilled />
                   Delete
                 </Button>

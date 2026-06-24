@@ -41,7 +41,11 @@ export default function MyProducts() {
     const doTheThing = async () => {
       try {
         const url = `/my_products?user_id=${user.dbUser._id}`
-        const { data: prods } = await api.get(url)
+        const { data: prods } = await api.get(url, {
+          headers: {
+            Authorization: `Bearer ${user.firebaseUser.accessToken}`,
+          },
+        })
         setMyProds(prods)
       } catch (err) {
         console.error(err)
@@ -49,7 +53,7 @@ export default function MyProducts() {
       }
     }
     doTheThing()
-  }, [user.dbUser._id, refetchTrigger])
+  }, [user, refetchTrigger])
 
   return (
     <PageStructure className="flex flex-col items-center gap-10 pb-28">

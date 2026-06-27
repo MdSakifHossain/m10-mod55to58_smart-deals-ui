@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { FieldContent, FieldTitle } from "@/components/ui/field"
-import { api } from "@/lib/api"
 import { useAuth } from "@/contexts/AuthProvider"
+import useAxios from "@/hooks/useAxios"
 
 export default function CreateProduct() {
   return (
@@ -62,6 +62,7 @@ function Fooorm() {
   const [categories, setCategories] = useState([])
   const [condition, setCondition] = useState("fresh") // "fresh" or "used"
   const { user } = useAuth()
+  const { putlicApi } = useAxios()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -89,7 +90,7 @@ function Fooorm() {
     }
 
     try {
-      await api.post("/products", newProductObj)
+      await putlicApi.post("/products", newProductObj)
       e.target.reset()
       navigate("/all-products")
       alert("Product Added")

@@ -30,8 +30,17 @@ const useAxios = () => {
       return config
     })
 
+    const responseInterceptro = privateApi.interceptors.response.use(
+      (res) => res,
+      (err) => {
+        // if err.status is 401 or 403 then log out the user and navigate to the login page
+        console.log(`error inside the interceptor`, err)
+      }
+    )
+
     return () => {
       privateApi.interceptors.request.eject(requestInterceptor)
+      privateApi.interceptors.request.eject(responseInterceptro)
     }
   }, [token])
 

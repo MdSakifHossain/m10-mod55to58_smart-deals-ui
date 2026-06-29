@@ -28,18 +28,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import useAxios from "@/hooks/useAxios"
 
 export default function MyBids() {
   const [myBids, setMyBids] = useState([])
   const [refetchTrigger, setRefetchTrigger] = useState(0)
   const { user } = useAuth()
+  const { privateApi } = useAxios()
 
   useEffect(() => {
     const userID = user?.dbUser?._id
     const doTheThing = async () => {
       try {
         if (userID) {
-          const { data: apiRes } = await api.get(`/my_bids?user_id=${userID}`)
+          const { data: apiRes } = await privateApi.get(
+            `/my_bids?user_id=${userID}`
+          )
           setMyBids(apiRes)
         }
       } catch (err) {

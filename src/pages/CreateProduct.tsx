@@ -62,7 +62,7 @@ function Fooorm() {
   const [categories, setCategories] = useState([])
   const [condition, setCondition] = useState("fresh") // "fresh" or "used"
   const { user } = useAuth()
-  const { putlicApi } = useAxios()
+  const { putlicApi, privateApi } = useAxios()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -90,7 +90,7 @@ function Fooorm() {
     }
 
     try {
-      await putlicApi.post("/products", newProductObj)
+      await privateApi.post("/products", newProductObj)
       e.target.reset()
       navigate("/all-products")
       alert("Product Added")

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useAuth } from "@/contexts/AuthProvider"
 import axios from "axios"
+import { useEffect } from "react"
 const API = import.meta.env.VITE_API_URL
 
 const putlicApi = axios.create({
@@ -23,10 +24,16 @@ const useAxios = () => {
   const { user } = useAuth()
   const token = user?.firebaseUser?.accessToken
 
-  privateApi.interceptors.request.use((config) => {
-    config.headers.authorization = `Bearer ${token}`
-    return config
-  })
+  useEffect(() => {
+    const requestInterceptor = privateApi.interceptors.request.use((config) => {
+      config.headers.authorization = `Bearer ${token}`
+      return config
+    })
+
+    return () => {
+      privateApi.interceptors.request.eject(requestInterceptor)
+    }
+  }, [token])
 
   return { putlicApi, privateApi }
 }

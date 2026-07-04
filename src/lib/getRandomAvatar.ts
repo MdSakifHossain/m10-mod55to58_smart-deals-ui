@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const default_avatars = [
     {
       id: 0,

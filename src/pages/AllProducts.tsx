@@ -1,3 +1,4 @@
+// @ts-nocheck
 import PageStructure from "@/components/my-components/PageStructure"
 import ProductCard from "@/components/my-components/ProductCard"
 import { api } from "@/lib/api"

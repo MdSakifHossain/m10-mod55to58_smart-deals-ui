@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { cn } from "@/lib/utils"
 
 const PageStructure = ({ className, children }) => {

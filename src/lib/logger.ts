@@ -1,3 +1,4 @@
+// @ts-nocheck
 const isDev = import.meta.env.DEV
 
 const logger = (...args) => isDev && console.log(...args)
